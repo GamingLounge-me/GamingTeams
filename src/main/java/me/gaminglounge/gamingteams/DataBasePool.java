@@ -125,45 +125,60 @@ public class DataBasePool {
         }
     }
 
-    public static void setOwner(DataBasePool pool, UUID owner) {
-        String querry = "INSERT INTO `teams` (`owner`) VALUES (?);";
+    public static boolean setOwner(DataBasePool pool, UUID owner, UUID player) {
+        String querry = "UPDATE `teams` SET `teams`.`owner` = ? WHERE `teams`.`owner` = ?;";
         try {
             Connection con = pool.getConnection();
             PreparedStatement sel = con.prepareStatement(querry);
             sel.setObject(1, owner);
-            sel.executeQuery();
+            sel.setObject(2, player);
+            ResultSet res = sel.executeQuery();
+            boolean succes;
+            succes = res.first();
             sel.close();
             con.close();
+            return succes;
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
     }
 
-    public static void setName(DataBasePool pool, String name) {
-        String querry = "INSERT INTO `teams` (`name`) VALUES (?);";
+    public static boolean  setName(DataBasePool pool, String name, UUID player) {
+        String querry = "UPDATE `teams` SET `teams`.`name` = ? WHERE `teams`.`owner` = ?;";
         try {
             Connection con = pool.getConnection();
             PreparedStatement sel = con.prepareStatement(querry);
             sel.setObject(1, name);
-            sel.executeQuery();
+            sel.setObject(2, player);
+            ResultSet res = sel.executeQuery();
+            boolean succes;
+            succes = res.first();
             sel.close();
             con.close();
+            return succes;
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
     }
 
-    public static void setTag(DataBasePool pool, String tag) {
-        String querry = "INSERT INTO `teams` (`tag`) VALUES (?);";
+    public static boolean setTag(DataBasePool pool, String tag, UUID player) {
+        String querry = "UPDATE `teams` SET `teams`.`tag` = ? WHERE `teams`.`owner` = ?;";
         try {
             Connection con = pool.getConnection();
             PreparedStatement sel = con.prepareStatement(querry);
             sel.setObject(1, tag);
-            sel.executeQuery();
+            sel.setObject(2, player);
+            ResultSet res = sel.executeQuery();
+            boolean succes;
+            succes = res.first();
             sel.close();
             con.close();
+            return succes;
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
     }
 
