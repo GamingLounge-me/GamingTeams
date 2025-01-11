@@ -123,10 +123,10 @@ public class TeamCommand {
                         new CommandAPICommand(Gamingteams.CONFIG.getString("Commands.Team.SubCommands.add"))
                         
                         )
-                        .withSubcommand(
-                            new CommandAPICommand(Gamingteams.CONFIG.getString("Commands.Team.SubCommands.remove"))
-                            
-                            )
+                    .withSubcommand(
+                        new CommandAPICommand(Gamingteams.CONFIG.getString("Commands.Team.SubCommands.remove"))
+                        
+                        )
             )
         .register();
     }
