@@ -114,12 +114,15 @@ public class DataBasePool {
             sel.setObject(1, team);
             sel.setObject(2, owner);
             ResultSet res = sel.executeQuery();
-            if (!res.first()) {
-                return false;
+            boolean succes;
+            if (res.first()) {
+                succes = true;
+            } else {
+                succes = false;
             }
             sel.close();
             con.close();
-            return true;
+            return succes;
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
