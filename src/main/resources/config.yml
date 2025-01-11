@@ -9,3 +9,9 @@ Commands:
     # aliases will unregister other commands using this name
     aliases:
       - team
+    SubCommands:
+      add: "add"
+      remove: "remove"
+      name: "name"
+      tag: "tag"
+      member: "member"

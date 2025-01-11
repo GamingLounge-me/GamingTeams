@@ -12,8 +12,27 @@ public class TeamCommand {
         new CommandAPICommand("GamingTeams:team")
             .withPermission(Gamingteams.CONFIG.getString("Commands.Team.permission"))
             .withAliases(Gamingteams.CONFIG.getStringList("Commands.Team.aliases").toArray(num -> new String[num]))
-        .register();
+            .withSubcommand(
+                new CommandAPICommand(Gamingteams.CONFIG.getString("Commands.Team.SubCommands.add"))
 
+            )
+            .withSubcommand(
+                new CommandAPICommand(Gamingteams.CONFIG.getString("Commands.Team.SubCommands.remove"))
+
+            )
+            .withSubcommand(
+                new CommandAPICommand(Gamingteams.CONFIG.getString("Commands.Team.SubCommands.name"))
+
+            )
+            .withSubcommand(
+                new CommandAPICommand(Gamingteams.CONFIG.getString("Commands.Team.SubCommands.tag"))
+
+            )
+            .withSubcommand(
+                new CommandAPICommand(Gamingteams.CONFIG.getString("Commands.Team.SubCommands.member"))
+
+            )
+        .register();
     }
     
 }
