@@ -15,3 +15,14 @@ Commands:
       name: "name"
       tag: "tag"
       member: "member"
+      leave: "leave"
+    Arguments:
+      name: "name"
+      tag: "tag"
+      owner: "owner"
+      player: "player"
+
+Messages:
+  alreadyInTeam: "<red>Your are already in a team</red>"
+  # Placeholder: <name>
+  addTeam: "<green>You succesfully added yout Team <name>.</green>"

@@ -90,19 +90,23 @@ public class DataBasePool {
         stmt.execute(sqlCreate);
     }
 
-        public static void addTeam(DataBasePool pool, UUID owner, String name, String tag) {
-        String querry = "INSERT INTO `teams` (`owner`, `name`, `tag`) VALUES (?, ?, ?);";
+        public static int addTeam(DataBasePool pool, UUID owner, String name, String tag) {
+        String querry = "INSERT INTO `teams` (`owner`, `name`, `tag`) VALUES (?, ?, ?) RETURNING `teams`.`id`;";
         try {
             Connection con = pool.getConnection();
             PreparedStatement sel = con.prepareStatement(querry);
             sel.setObject(1, owner);
             sel.setObject(2, name);
             sel.setObject(3, tag);
-            sel.executeQuery();
+            ResultSet res = sel.executeQuery();
+            res.first();
+            int id = res.getInt("id");
             sel.close();
             con.close();
+            return id;
         } catch (SQLException e) {
             e.printStackTrace();
+            return -1;
         }
     }
 
