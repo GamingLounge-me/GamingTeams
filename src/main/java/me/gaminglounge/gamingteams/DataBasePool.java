@@ -115,11 +115,7 @@ public class DataBasePool {
             sel.setObject(2, owner);
             ResultSet res = sel.executeQuery();
             boolean succes;
-            if (res.first()) {
-                succes = true;
-            } else {
-                succes = false;
-            }
+            succes = res.first();
             sel.close();
             con.close();
             return succes;
