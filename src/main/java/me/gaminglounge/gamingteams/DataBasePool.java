@@ -161,4 +161,19 @@ public class DataBasePool {
         }
     }
 
+    public static void removePlayerToTeam(DataBasePool pool, int team, UUID playerUUID) {
+        String querry = "DELETE FROM `player` WHERE player.id = ? AND player.player = ?;";
+        try {
+            Connection con = pool.getConnection();
+            PreparedStatement sel = con.prepareStatement(querry);
+            sel.setObject(1, team);
+            sel.setObject(2, playerUUID);
+            sel.executeQuery();
+            sel.close();
+            con.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
