@@ -62,4 +62,28 @@ public class DataBasePool {
         return connection;
     }
 
+    public void createTableTeams() throws SQLException {
+        Connection con = getConnection();
+        String sqlCreate = "CREATE TABLE IF NOT EXISTS teams (" +
+            "id INTEGER AUTO_INCREMENT PRIMARY KEY NOT NULL," +
+            "name VARCHAR(128) NOT NULL," +
+            "owner UUID NOT NULL," +
+            "tag VARCHAR(16) NOT NULL)" +
+            "ENGINE = InnoDB;";
+
+        Statement stmt = con.createStatement();
+        stmt.execute(sqlCreate);
+    }
+
+    public void createTablePlayer() throws SQLException {
+        Connection con = getConnection();
+        String sqlCreate = "CREATE TABLE IF NOT EXISTS player (" +
+            "id INTEGER NOT NULL," +
+            "player UUID NOT NULL)" +
+            "ENGINE = InnoDB;";
+
+        Statement stmt = con.createStatement();
+        stmt.execute(sqlCreate);
+    }
+
 }
