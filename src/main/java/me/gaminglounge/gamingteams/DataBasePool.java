@@ -198,9 +198,10 @@ public class DataBasePool {
             }
             sel.close();
             con.close();
-            return int;
+            return id;
         } catch (SQLException e) {
             e.printStackTrace();
+            return -1;
         }
     }
 
