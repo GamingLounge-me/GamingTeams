@@ -132,4 +132,18 @@ public class DataBasePool {
         }
     }
 
+    public static void setTag(DataBasePool pool, String tag) {
+        String querry = "INSERT INTO `teams` (`tag`) VALUES (?);";
+        try {
+            Connection con = pool.getConnection();
+            PreparedStatement sel = con.prepareStatement(querry);
+            sel.setObject(1, tag);
+            sel.executeQuery();
+            sel.close();
+            con.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }s
+
 }
