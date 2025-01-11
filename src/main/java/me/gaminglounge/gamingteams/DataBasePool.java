@@ -104,4 +104,18 @@ public class DataBasePool {
         }
     }
 
+    public static void setOwner(DataBasePool pool, UUID owner) {
+        String querry = "INSERT INTO `teams` (`owner`) VALUES (?);";
+        try {
+            Connection con = pool.getConnection();
+            PreparedStatement sel = con.prepareStatement(querry);
+            sel.setObject(1, owner);
+            sel.executeQuery();
+            sel.close();
+            con.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
