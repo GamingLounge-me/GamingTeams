@@ -3,8 +3,10 @@ package me.gaminglounge.gamingteams;
 import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Enumeration;
+import java.util.UUID;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -84,6 +86,22 @@ public class DataBasePool {
 
         Statement stmt = con.createStatement();
         stmt.execute(sqlCreate);
+    }
+
+        public static void addTeam(DataBasePool pool, UUID owner, String name, String tag) {
+        String querry = "INSERT INTO `teams` (`owner`, `name`, `tag`) VALUES (?, ?, ?);";
+        try {
+            Connection con = pool.getConnection();
+            PreparedStatement sel = con.prepareStatement(querry);
+            sel.setObject(1, owner);
+            sel.setObject(2, name);
+            sel.setObject(3, tag);
+            sel.executeQuery();
+            sel.close();
+            con.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 }
