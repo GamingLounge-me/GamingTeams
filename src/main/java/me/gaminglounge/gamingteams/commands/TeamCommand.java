@@ -57,7 +57,27 @@ public class TeamCommand {
             )
             .withSubcommand(
                 new CommandAPICommand(Gamingteams.CONFIG.getString("Commands.Team.SubCommands.remove"))
+                    .executesPlayer((p, args) -> {
+                        UUID pID = p.getUniqueId();
+                        int team = DataBasePool.getPlayerTeam(Gamingteams.INSTANCE.basePool, pID);
 
+                        if (
+                            DataBasePool.removeTeam(
+                                Gamingteams.INSTANCE.basePool,
+                                team,
+                                pID
+                            )
+                        ) {
+                            DataBasePool.removePlayerToTeam(
+                                Gamingteams.INSTANCE.basePool,
+                                team,
+                                pID
+                                );
+                            p.sendMessage(Gamingteams.CONFIG.getString("Messages.removedTeam"));
+                            return;
+                        }
+                        p.sendMessage(Gamingteams.CONFIG.getString("Messages.notOwner"));
+                    })
             )
             .withSubcommand(
                 new CommandAPICommand(Gamingteams.CONFIG.getString("Commands.Team.SubCommands.name"))

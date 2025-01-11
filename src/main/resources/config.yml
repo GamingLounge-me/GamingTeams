@@ -24,5 +24,7 @@ Commands:
 
 Messages:
   alreadyInTeam: "<red>Your are already in a team</red>"
+  notOwner: "<red>You are not the owner of this your team.</red>"
+  removedTeam: "<green>Your team was succesfully removed.</green>"
   # Placeholder: <name>
   addTeam: "<green>You succesfully added yout Team <name>.</green>"
