@@ -6,3 +6,6 @@ Password: ""
 Commands:
   Team:
     permission: "gamingteams.commands.team"
+    # aliases will unregister other commands using this name
+    aliases:
+      - team
