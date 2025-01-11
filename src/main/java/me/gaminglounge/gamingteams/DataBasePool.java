@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Enumeration;
@@ -102,6 +103,26 @@ public class DataBasePool {
             con.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+
+    public static boolean removeTeam(DataBasePool pool, int team, UUID owner) {
+        String querry = "DELETE FROM `teams` WHERE teams.id = ? AND teams.owner = ?;";
+        try {
+            Connection con = pool.getConnection();
+            PreparedStatement sel = con.prepareStatement(querry);
+            sel.setObject(1, team);
+            sel.setObject(2, owner);
+            ResultSet res = sel.executeQuery();
+            if (!res.first()) {
+                return false;
+            }
+            sel.close();
+            con.close();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
         }
     }
 
