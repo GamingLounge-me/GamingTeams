@@ -1,0 +1,7 @@
+name: Gamingteams
+version: '${version}' 
+main: me.gaminglounge.gamingteams.Gamingteams
+description: 
+api-version: '1.21' 
+authors: 
+  - "NAME" 
