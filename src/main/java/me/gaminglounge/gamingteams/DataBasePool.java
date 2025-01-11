@@ -118,4 +118,18 @@ public class DataBasePool {
         }
     }
 
+    public static void setName(DataBasePool pool, String name) {
+        String querry = "INSERT INTO `teams` (`name`) VALUES (?);";
+        try {
+            Connection con = pool.getConnection();
+            PreparedStatement sel = con.prepareStatement(querry);
+            sel.setObject(1, name);
+            sel.executeQuery();
+            sel.close();
+            con.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
