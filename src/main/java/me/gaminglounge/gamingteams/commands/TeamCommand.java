@@ -27,6 +27,7 @@ public class TeamCommand {
                     .withArguments(new StringArgument(Gamingteams.CONFIG.getString("Commands.Team.Arguments.name")))
                     .withArguments(new StringArgument(Gamingteams.CONFIG.getString("Commands.Team.Arguments.tag")))
                     .executesPlayer((p, args) -> {
+                        // TODO: No double names
                         UUID pID = p.getUniqueId();
                         int team = DataBasePool.getPlayerTeam(
                             Gamingteams.INSTANCE.basePool,
