@@ -183,6 +183,27 @@ public class DataBasePool {
         }
     }
 
+    public static int getPlayerTeam(DataBasePool pool, UUID playerUUID) {
+        String querry = "SELECT `player`.`id` FROM `player` WHERE `player`.`player` = ?;";
+        try {
+            Connection con = pool.getConnection();
+            PreparedStatement sel = con.prepareStatement(querry);
+            sel.setObject(1, playerUUID);
+            ResultSet res = sel.executeQuery();
+            int id;
+            if (!res.first()) {
+                id = -1;
+            } else {
+                id = res.getInt("id");
+            }
+            sel.close();
+            con.close();
+            return int;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void removePlayerToTeam(DataBasePool pool, int team, UUID playerUUID) {
         String querry = "DELETE FROM `player` WHERE player.id = ? AND player.player = ?;";
         try {
