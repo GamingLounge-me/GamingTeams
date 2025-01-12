@@ -4,7 +4,11 @@ import java.sql.SQLException;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.PluginManager; 
-import org.bukkit.plugin.java.JavaPlugin; 
+import org.bukkit.plugin.java.JavaPlugin;
+
+import dev.jorel.commandapi.CommandAPI;
+import dev.jorel.commandapi.CommandAPIBukkitConfig;
+import me.gaminglounge.gamingteams.commands.TeamCommand; 
  
 public final class Gamingteams extends JavaPlugin { 
  
@@ -30,6 +34,9 @@ public final class Gamingteams extends JavaPlugin {
         }
 
         manager = new TeamManager();
+
+        if (!CommandAPI.isLoaded()) CommandAPI.onLoad(new CommandAPIBukkitConfig(this));
+        new TeamCommand();
     }
 
     @Override
