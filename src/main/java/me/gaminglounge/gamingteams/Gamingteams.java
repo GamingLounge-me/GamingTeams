@@ -16,9 +16,10 @@ public final class Gamingteams extends JavaPlugin {
     @Override
     public void onLoad() {
         INSTANCE = this; 
+        this.saveDefaultConfig();
         CONFIG = this.getConfig();
 
-                basePool = new DataBasePool();
+        basePool = new DataBasePool();
         basePool.init();
 
         try {
