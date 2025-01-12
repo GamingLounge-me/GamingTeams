@@ -202,8 +202,12 @@ public class DataBasePool {
             PreparedStatement sel = con.prepareStatement(querry);
             sel.setObject(1, playerUUID);
             ResultSet res = sel.executeQuery();
-            res.first();
-            int id = res.getInt("id");
+            int id;
+            if (res.first()) {
+                id = res.getInt("id");
+            } else {
+                id = 0;
+            }
             sel.close();
             con.close();
             return id;
@@ -220,8 +224,12 @@ public class DataBasePool {
             PreparedStatement sel = con.prepareStatement(querry);
             sel.setObject(1, name);
             ResultSet res = sel.executeQuery();
-            res.first();
-            int id = res.getInt("id");
+            int id;
+            if (res.first()) {
+                id = res.getInt("id");
+            } else {
+                id = 0;
+            }
             sel.close();
             con.close();
             return id;
