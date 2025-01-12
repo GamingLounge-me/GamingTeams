@@ -1,7 +1,8 @@
 name: Gamingteams
-version: '${version}' 
+version: "${version}"
 main: me.gaminglounge.gamingteams.Gamingteams
-description: 
-api-version: '1.21' 
-authors: 
-  - "NAME" 
+loader: me.gaminglounge.gamingteams.GamingteamsLoader
+description:
+api-version: "1.21.4"
+authors:
+  - "Jon1Games"
