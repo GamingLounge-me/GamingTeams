@@ -201,7 +201,7 @@ public class DataBasePool {
         }
     }
 
-    public static int getPlayerTeam(DataBasePool pool, UUID playerUUID) {
+    public static int getTeam(DataBasePool pool, UUID playerUUID) {
         String querry = "SELECT `player`.`id` FROM `player` WHERE `player`.`player` = ?;";
         try {
             Connection con = pool.getConnection();

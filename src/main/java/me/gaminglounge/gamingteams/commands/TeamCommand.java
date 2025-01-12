@@ -27,19 +27,23 @@ public class TeamCommand {
                     .withArguments(new StringArgument(Gamingteams.CONFIG.getString("Commands.Team.Arguments.name")))
                     .withArguments(new StringArgument(Gamingteams.CONFIG.getString("Commands.Team.Arguments.tag")))
                     .executesPlayer((p, args) -> {
-                        // TODO: No double names
                         UUID pID = p.getUniqueId();
-                        int team = DataBasePool.getPlayerTeam(
+                        int team = DataBasePool.getTeam(
                             Gamingteams.INSTANCE.basePool,
                             pID
                             );
 
-                        if (team == -1) {
+                        if (team != -1) {
                             p.sendMessage(mm.deserialize(Gamingteams.CONFIG.getString("Messages.alreadyInTeam")));
                             return;
                         }
 
                         String name = (String) args.get(Gamingteams.CONFIG.getString("Commands.Team.Arguments.name"));
+
+                        if (DataBasePool.getTeam(Gamingteams.INSTANCE.basePool, name) != -1) {
+                            p.sendMessage(mm.deserialize(Gamingteams.CONFIG.getString("Messages.teamNameInUse")));
+                            return;
+                        }
                         team = DataBasePool.addTeam(
                             Gamingteams.INSTANCE.basePool,
                             pID,
@@ -60,7 +64,7 @@ public class TeamCommand {
                 new CommandAPICommand(Gamingteams.CONFIG.getString("Commands.Team.SubCommands.remove"))
                     .executesPlayer((p, args) -> {
                         UUID pID = p.getUniqueId();
-                        int team = DataBasePool.getPlayerTeam(Gamingteams.INSTANCE.basePool, pID);
+                        int team = DataBasePool.getTeam(Gamingteams.INSTANCE.basePool, pID);
 
                         if (
                             DataBasePool.removeTeam(
