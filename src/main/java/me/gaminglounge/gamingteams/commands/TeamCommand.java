@@ -70,12 +70,16 @@ public class TeamCommand {
                         int team = DataBasePool.getTeam(Gamingteams.INSTANCE.basePool, pID);
 
                         if (
+                            DataBasePool.isOwner(
+                                Gamingteams.INSTANCE.basePool,
+                                pID,
+                                team)
+                        ) {
                             DataBasePool.removeTeam(
                                 Gamingteams.INSTANCE.basePool,
                                 team,
                                 pID
-                            )
-                        ) {
+                            );
                             DataBasePool.removePlayerToTeam(
                                 Gamingteams.INSTANCE.basePool,
                                 team,

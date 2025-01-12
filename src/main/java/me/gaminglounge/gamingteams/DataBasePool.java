@@ -110,22 +110,18 @@ public class DataBasePool {
         }
     }
 
-    public static boolean removeTeam(DataBasePool pool, int team, UUID owner) {
+    public static void removeTeam(DataBasePool pool, int team, UUID owner) {
         String querry = "DELETE FROM `teams` WHERE teams.id = ? AND teams.owner = ?;";
         try {
             Connection con = pool.getConnection();
             PreparedStatement sel = con.prepareStatement(querry);
             sel.setObject(1, team);
             sel.setObject(2, owner);
-            ResultSet res = sel.executeQuery();
-            boolean succes;
-            succes = res.first();
+            sel.executeQuery();
             sel.close();
             con.close();
-            return succes;
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
         }
     }
 
