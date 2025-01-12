@@ -27,7 +27,7 @@ Messages:
   notOwner: "<red>You are not the owner of your team.</red>"
   removedTeam: "<green>Your team was succesfully removed.</green>"
   teamNameInUse: "<red>This team name is already in use</red>"
-  notInATeam: "<red>You are not in a team.!</red>"
+  notInATeam: "<red>You are not in a team!</red>"
   leaftTeam: "You leaft your team."
   cannotRemovePlayer: "<red>You cannot remove that player from your team!</red>"
   ownerCannotLeave: "<red>The owner of a team cannot leave it, remove the team or give an other Person the owner privilige.</red>"

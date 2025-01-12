@@ -163,9 +163,9 @@ public class TeamCommand {
                             .executesPlayer((p, args) -> {
                                 Player i = (Player) args.get(Gamingteams.CONFIG.getString("Commands.Team.Arguments.player"));
                                 int team = DataBasePool.getTeam(Gamingteams.INSTANCE.basePool, p.getUniqueId());
-                                String name = DataBasePool.getName(Gamingteams.INSTANCE.basePool, team);
-                                if (team == -1 || name == null) p.sendMessage(mm.deserialize(Gamingteams.CONFIG.getString("Messages.notInATeam")));
+                                if (team == -1) p.sendMessage(mm.deserialize(Gamingteams.CONFIG.getString("Messages.notInATeam")));
                                 if (Gamingteams.INSTANCE.manager.invite(p, team)) {
+                                    String name = DataBasePool.getName(Gamingteams.INSTANCE.basePool, team);
                                     p.sendMessage(mm.deserialize(Gamingteams.CONFIG.getString("Messages.invitedPlayer"),
                                         Placeholder.component("player", i.displayName())
                                     ));
