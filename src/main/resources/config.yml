@@ -30,6 +30,8 @@ Messages:
   notInATeam: "<red>You are not in a team.!</red>"
   leaftTeam: "You leaft your team."
   cannotRemovePlayer: "<red>You cannot remove that player from your team!</red>"
+  ownerCannotLeave: "<red>The owner of a team cannot leave it, remove the team or give an other Person the owner privilige.</red>"
+  removeSelf: "<red>You cannot remove you self from a team!</red>"
   # Placeholder: <name>
   addTeam: "<green>You succesfully added yout Team <name>.</green>"
   changeName: "<green>You succesfully changes the teams name to <name>.</green>"

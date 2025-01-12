@@ -93,6 +93,7 @@ public class TeamCommand {
             )
             .withSubcommand(
                 new CommandAPICommand(Gamingteams.CONFIG.getString("Commands.Team.SubCommands.name"))
+                    .withArguments(new StringArgument(Gamingteams.CONFIG.getString("Commands.Team.Arguments.name")))
                     .executesPlayer((p, args) -> {
                         String name = (String) args.get(Gamingteams.CONFIG.getString("Commands.Team.Arguments.name"));
                         if (
@@ -112,6 +113,7 @@ public class TeamCommand {
             )
             .withSubcommand(
                 new CommandAPICommand(Gamingteams.CONFIG.getString("Commands.Team.SubCommands.tag"))
+                    .withArguments(new StringArgument(Gamingteams.CONFIG.getString("Commands.Team.Arguments.tag")))
                     .executesPlayer((p, args) -> {
                         String tag = (String) args.get(Gamingteams.CONFIG.getString("Commands.Team.Arguments.tag"));
                         if (
@@ -138,6 +140,17 @@ public class TeamCommand {
                             p.sendMessage(mm.deserialize(Gamingteams.CONFIG.getString("Messages.notInATeam")));
                             return;
                         }
+
+                        if (
+                            DataBasePool.isOwner(
+                                Gamingteams.INSTANCE.basePool,
+                                uuid,
+                                id)
+                        ) {
+                            p.sendMessage(mm.deserialize(Gamingteams.CONFIG.getString("Messages.ownerCannotLeave")));
+                            return;
+                        }
+
                         DataBasePool.removePlayerToTeam(Gamingteams.INSTANCE.basePool, id, uuid);
                         p.sendMessage(mm.deserialize(Gamingteams.CONFIG.getString("Messages.leaftTeam")));
                     })
@@ -168,6 +181,8 @@ public class TeamCommand {
                             .executesPlayer((p, args) -> {
                                 Player i = (Player) args.get(Gamingteams.CONFIG.getString("Commands.Team.Arguments.player"));
                                 UUID uuid = i.getUniqueId();
+
+                                if (p == i) p.sendMessage(mm.deserialize(Gamingteams.CONFIG.getString("Messages.removeSelf")));
 
                                 int yourTeam = DataBasePool.getTeam(Gamingteams.INSTANCE.basePool, p.getUniqueId());
                                 if (yourTeam == -1) p.sendMessage(mm.deserialize(Gamingteams.CONFIG.getString("Messages.notInATeam")));
