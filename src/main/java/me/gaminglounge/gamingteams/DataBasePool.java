@@ -267,6 +267,23 @@ public class DataBasePool {
         }
     }
 
+    public static boolean isOwner(DataBasePool pool, UUID owner, int team) {
+        String querry = "SELECT `teams`.`owner` FROM `teams` WHERE `teams`.`id` = ?;";
+        try {
+            Connection con = pool.getConnection();
+            PreparedStatement sel = con.prepareStatement(querry);
+            sel.setObject(1, team);
+            ResultSet res = sel.executeQuery();
+            boolean isOwner = res.first();
+            sel.close();
+            con.close();
+            return isOwner;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public static void removePlayerToTeam(DataBasePool pool, int team, UUID playerUUID) {
         String querry = "DELETE FROM `player` WHERE player.id = ? AND player.player = ?;";
         try {

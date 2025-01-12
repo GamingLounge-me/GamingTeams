@@ -24,7 +24,7 @@ Commands:
 
 Messages:
   alreadyInTeam: "<red>Your are already in a team</red>"
-  notOwner: "<red>You are not the owner of this your team.</red>"
+  notOwner: "<red>You are not the owner of your team.</red>"
   removedTeam: "<green>Your team was succesfully removed.</green>"
   teamNameInUse: "<red>This team name is already in use</red>"
   notInATeam: "<red>You are not in a team.!</red>"

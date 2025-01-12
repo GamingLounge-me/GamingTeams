@@ -108,22 +108,35 @@ public class TeamCommand {
             )
             .withSubcommand(
                 new CommandAPICommand(Gamingteams.CONFIG.getString("Commands.Team.SubCommands.tag"))
-                .executesPlayer((p, args) -> {
-                    String tag = (String) args.get(Gamingteams.CONFIG.getString("Commands.Team.Arguments.tag"));
-                    if (
-                        DataBasePool.setTag(
-                            Gamingteams.INSTANCE.basePool,
-                            tag,
-                            p.getUniqueId()
-                            )
-                    ) {
-                        p.sendMessage(mm.deserialize(Gamingteams.CONFIG.getString("Messages.changeTag"),
-                            Placeholder.component("tag", mm.deserialize(tag))
-                        ));
-                        return;
-                    }
-                    p.sendMessage(mm.deserialize(Gamingteams.CONFIG.getString("Messages.notOwner")));
-                })
+                    .executesPlayer((p, args) -> {
+                        String tag = (String) args.get(Gamingteams.CONFIG.getString("Commands.Team.Arguments.tag"));
+                        if (
+                            DataBasePool.setTag(
+                                Gamingteams.INSTANCE.basePool,
+                                tag,
+                                p.getUniqueId()
+                                )
+                        ) {
+                            p.sendMessage(mm.deserialize(Gamingteams.CONFIG.getString("Messages.changeTag"),
+                                Placeholder.component("tag", mm.deserialize(tag))
+                            ));
+                            return;
+                        }
+                        p.sendMessage(mm.deserialize(Gamingteams.CONFIG.getString("Messages.notOwner")));
+                    })
+            )
+            .withSubcommand(
+                new CommandAPICommand(Gamingteams.CONFIG.getString("Commands.Team.SubCommands.leave"))
+                    .executesPlayer((p, args) -> {
+                        UUID uuid = p.getUniqueId();
+                        int id = DataBasePool.getTeam(Gamingteams.INSTANCE.basePool, uuid);
+                        if (id == -1) {
+                            p.sendMessage(mm.deserialize(Gamingteams.CONFIG.getString("Messages.notInATeam")));
+                            return;
+                        }
+                        DataBasePool.removePlayerToTeam(Gamingteams.INSTANCE.basePool, id, uuid);
+                        p.sendMessage(mm.deserialize(Gamingteams.CONFIG.getString("Messages.leaftTeam")));
+                    })
             )
             .withSubcommand(
                 new CommandAPICommand(Gamingteams.CONFIG.getString("Commands.Team.SubCommands.member"))
@@ -147,8 +160,24 @@ public class TeamCommand {
                         )
                     .withSubcommand(
                         new CommandAPICommand(Gamingteams.CONFIG.getString("Commands.Team.SubCommands.remove"))
+                            .withArguments(new EntitySelectorArgument.OnePlayer(Gamingteams.CONFIG.getString("Commands.Team.Arguments.player")))
                             .executesPlayer((p, args) -> {
-                                
+                                Player i = (Player) args.get(Gamingteams.CONFIG.getString("Commands.Team.Arguments.player"));
+                                UUID uuid = i.getUniqueId();
+
+                                int yourTeam = DataBasePool.getTeam(Gamingteams.INSTANCE.basePool, p.getUniqueId());
+                                if (yourTeam == -1) p.sendMessage(mm.deserialize(Gamingteams.CONFIG.getString("Messages.notInATeam")));
+
+                                int team = DataBasePool.getTeam(Gamingteams.INSTANCE.basePool, uuid);
+                                if (team == -1) p.sendMessage(mm.deserialize(Gamingteams.CONFIG.getString("Messages.cannotRemovePlayer")));
+
+                                if (!DataBasePool.isOwner(Gamingteams.INSTANCE.basePool, uuid, yourTeam)) {
+                                    p.sendMessage(mm.deserialize(Gamingteams.CONFIG.getString("Messages.notOwner")));
+                                    return;
+                                }
+
+                                DataBasePool.removePlayerToTeam(Gamingteams.INSTANCE.basePool, yourTeam, uuid);
+
                             })
                         )
             )
