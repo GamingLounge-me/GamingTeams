@@ -151,12 +151,10 @@ public class DataBasePool {
             PreparedStatement sel = con.prepareStatement(querry);
             sel.setObject(1, name);
             sel.setObject(2, player);
-            ResultSet res = sel.executeQuery();
-            boolean succes;
-            succes = res.first();
+            sel.executeQuery();
             sel.close();
             con.close();
-            return succes;
+            return true;
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
