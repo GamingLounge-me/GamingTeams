@@ -245,6 +245,28 @@ public class DataBasePool {
         }
     }
 
+    public static String getName(DataBasePool pool, int team) {
+        String querry = "SELECT `teams`.`name` FROM `teams` WHERE `teams`.`id` = ?;";
+        try {
+            Connection con = pool.getConnection();
+            PreparedStatement sel = con.prepareStatement(querry);
+            sel.setObject(1, team);
+            ResultSet res = sel.executeQuery();
+            String name;
+            if (!res.first()) {
+                name = null;
+            } else {
+                name = res.getString("name");
+            }
+            sel.close();
+            con.close();
+            return name;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public static void removePlayerToTeam(DataBasePool pool, int team, UUID playerUUID) {
         String querry = "DELETE FROM `player` WHERE player.id = ? AND player.player = ?;";
         try {

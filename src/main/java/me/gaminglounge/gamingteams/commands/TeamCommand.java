@@ -2,8 +2,11 @@ package me.gaminglounge.gamingteams.commands;
 
 import java.util.UUID;
 
+import org.bukkit.entity.Player;
+
 import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPICommand;
+import dev.jorel.commandapi.arguments.EntitySelectorArgument;
 import dev.jorel.commandapi.arguments.StringArgument;
 import me.gaminglounge.gamingteams.DataBasePool;
 import me.gaminglounge.gamingteams.Gamingteams;
@@ -126,11 +129,27 @@ public class TeamCommand {
                 new CommandAPICommand(Gamingteams.CONFIG.getString("Commands.Team.SubCommands.member"))
                     .withSubcommand(
                         new CommandAPICommand(Gamingteams.CONFIG.getString("Commands.Team.SubCommands.add"))
-                        
+                            .withArguments(new EntitySelectorArgument.OnePlayer(Gamingteams.CONFIG.getString("Commands.Team.Arguments.player")))
+                            .executesPlayer((p, args) -> {
+                                Player i = (Player) args.get(Gamingteams.CONFIG.getString("Commands.Team.Arguments.player"));
+                                int team = DataBasePool.getTeam(Gamingteams.INSTANCE.basePool, p.getUniqueId());
+                                String name = DataBasePool.getName(Gamingteams.INSTANCE.basePool, team);
+                                if (team == -1 || name == null) p.sendMessage(mm.deserialize(Gamingteams.CONFIG.getString("Messages.notInATeam")));
+                                if (Gamingteams.INSTANCE.manager.invite(p, team)) {
+                                    p.sendMessage(mm.deserialize(Gamingteams.CONFIG.getString("Messages.invitedPlayer"),
+                                        Placeholder.component("player", i.displayName())
+                                    ));
+                                    i.sendMessage(mm.deserialize(Gamingteams.CONFIG.getString("Messages.invited"),
+                                        Placeholder.component("name", mm.deserialize(name))
+                                    ));
+                                }
+                            })
                         )
                     .withSubcommand(
                         new CommandAPICommand(Gamingteams.CONFIG.getString("Commands.Team.SubCommands.remove"))
-                        
+                            .executesPlayer((p, args) -> {
+                                
+                            })
                         )
             )
         .register();
