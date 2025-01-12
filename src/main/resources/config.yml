@@ -28,6 +28,8 @@ Messages:
   removedTeam: "<green>Your team was succesfully removed.</green>"
   teamNameInUse: "<red>This team name is already in use</red>"
   notInATeam: "<red>You are not in a team.!</red>"
+  leaftTeam: "You leaft your team."
+  cannotRemovePlayer: "<red>You cannot remove that player from your team!</red>"
   # Placeholder: <name>
   addTeam: "<green>You succesfully added yout Team <name>.</green>"
   changeName: "<green>You succesfully changes the teams name to <name>.</green>"
