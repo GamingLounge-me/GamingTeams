@@ -148,7 +148,7 @@ public class DataBasePool {
         }
     }
 
-    public static boolean  setName(DataBasePool pool, String name, UUID player) {
+    public static boolean setName(DataBasePool pool, String name, UUID player) {
         String querry = "UPDATE `teams` SET `teams`.`name` = ? WHERE `teams`.`owner` = ?;";
         try {
             Connection con = pool.getConnection();
@@ -207,6 +207,28 @@ public class DataBasePool {
             Connection con = pool.getConnection();
             PreparedStatement sel = con.prepareStatement(querry);
             sel.setObject(1, playerUUID);
+            ResultSet res = sel.executeQuery();
+            int id;
+            if (!res.first()) {
+                id = -1;
+            } else {
+                id = res.getInt("id");
+            }
+            sel.close();
+            con.close();
+            return id;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
+    public static int getTeam(DataBasePool pool, String name) {
+        String querry = "SELECT `teams`.`id` FROM `teams` WHERE `teams`.`name` = ?;";
+        try {
+            Connection con = pool.getConnection();
+            PreparedStatement sel = con.prepareStatement(querry);
+            sel.setObject(1, name);
             ResultSet res = sel.executeQuery();
             int id;
             if (!res.first()) {
