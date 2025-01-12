@@ -13,6 +13,7 @@ import dev.jorel.commandapi.arguments.OfflinePlayerArgument;
 import dev.jorel.commandapi.arguments.StringArgument;
 import me.gaminglounge.gamingteams.DataBasePool;
 import me.gaminglounge.gamingteams.Gamingteams;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 
@@ -306,17 +307,22 @@ public class TeamCommand {
                                 }
 
                                 DataBasePool.removePlayerToTeam(Gamingteams.INSTANCE.basePool, yourTeam, uuid);
-                                Gamingteams.INSTANCE.manager.removeInvite(p, team);
-                                if (i.isOnline()) { 
+                                Component name;
+                                if (i.isOnline()) {
+                                    Gamingteams.INSTANCE.manager.removeInvite((Player) i, team);
+                                    name = ((Player) i).displayName();
                                     ((Player) i).sendMessage(mm.deserialize(Gamingteams.CONFIG.getString("Messages.playerRemoved"),
-                                        Placeholder.component("player", p.displayName())
+                                        Placeholder.component("player", name)
                                     ));
+                                } else {
+                                    name = net.kyori.adventure.text.Component.text(i.getName());
                                 }
+
                                 List<OfflinePlayer> list = DataBasePool.getMembersOfflinePlayer(Gamingteams.INSTANCE.basePool, team);
                                 list.forEach(action -> {
                                     if (action.isOnline()) { 
                                         ((Player) action).sendMessage(mm.deserialize(Gamingteams.CONFIG.getString("Messages.playerRemoved"),
-                                            Placeholder.component("player", p.displayName())
+                                            Placeholder.component("player", name)
                                         ));
                                     }
                                 });
