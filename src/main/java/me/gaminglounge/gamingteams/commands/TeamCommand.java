@@ -36,14 +36,14 @@ public class TeamCommand {
                             pID
                             );
 
-                        if (team != -1) {
+                        if (team != 0) {
                             p.sendMessage(mm.deserialize(Gamingteams.CONFIG.getString("Messages.alreadyInTeam")));
                             return;
                         }
 
                         String name = (String) args.get(Gamingteams.CONFIG.getString("Commands.Team.Arguments.name"));
 
-                        if (DataBasePool.getTeam(Gamingteams.INSTANCE.basePool, name) != -1) {
+                        if (DataBasePool.getTeam(Gamingteams.INSTANCE.basePool, name) != 0) {
                             p.sendMessage(mm.deserialize(Gamingteams.CONFIG.getString("Messages.teamNameInUse")));
                             return;
                         }
@@ -136,7 +136,7 @@ public class TeamCommand {
                     .executesPlayer((p, args) -> {
                         UUID uuid = p.getUniqueId();
                         int id = DataBasePool.getTeam(Gamingteams.INSTANCE.basePool, uuid);
-                        if (id == -1) {
+                        if (id == 0) {
                             p.sendMessage(mm.deserialize(Gamingteams.CONFIG.getString("Messages.notInATeam")));
                             return;
                         }
@@ -197,10 +197,10 @@ public class TeamCommand {
                                 }
 
                                 int yourTeam = DataBasePool.getTeam(Gamingteams.INSTANCE.basePool, p.getUniqueId());
-                                if (yourTeam == -1) p.sendMessage(mm.deserialize(Gamingteams.CONFIG.getString("Messages.notInATeam")));
+                                if (yourTeam == 0) p.sendMessage(mm.deserialize(Gamingteams.CONFIG.getString("Messages.notInATeam")));
 
                                 int team = DataBasePool.getTeam(Gamingteams.INSTANCE.basePool, uuid);
-                                if (team == -1) p.sendMessage(mm.deserialize(Gamingteams.CONFIG.getString("Messages.cannotRemovePlayer")));
+                                if (team == 0) p.sendMessage(mm.deserialize(Gamingteams.CONFIG.getString("Messages.cannotRemovePlayer")));
 
                                 if (!DataBasePool.isOwner(Gamingteams.INSTANCE.basePool, uuid, yourTeam)) {
                                     p.sendMessage(mm.deserialize(Gamingteams.CONFIG.getString("Messages.notOwner")));
