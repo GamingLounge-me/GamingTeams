@@ -202,18 +202,14 @@ public class DataBasePool {
             PreparedStatement sel = con.prepareStatement(querry);
             sel.setObject(1, playerUUID);
             ResultSet res = sel.executeQuery();
-            int id;
-            if (!res.first()) {
-                id = -1;
-            } else {
-                id = res.getInt("id");
-            }
+            res.first();
+            int id = res.getInt("id");
             sel.close();
             con.close();
             return id;
         } catch (SQLException e) {
             e.printStackTrace();
-            return -1;
+            return 0;
         }
     }
 
