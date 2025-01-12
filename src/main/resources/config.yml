@@ -29,5 +29,6 @@ Messages:
   # Placeholder: <name>
   addTeam: "<green>You succesfully added yout Team <name>.</green>"
   changeName: "<green>You succesfully changes the teams name to <name>.</green>"
+  invited: "You got invited in the team <name>."
   # Placeholder: <tag>
   changeTag: "<green>You succesfully changes the teams tag to <tag>.</green>"
