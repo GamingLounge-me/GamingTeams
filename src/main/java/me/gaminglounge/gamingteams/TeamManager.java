@@ -27,17 +27,18 @@ public class TeamManager {
     }
 
     public boolean accept(Player p, int team) {
-        HashMap<Player, HashMap<Integer, Long>> a = new HashMap<>();
         for (HashMap<Player, HashMap<Integer, Long>> b : invites) {
-            if (b.containsKey(p) && b.get(p).containsKey(team)) {
-                a = b;
-                break;
+            if (
+                b.containsKey(p) && b.get(p).containsKey(team) &&
+                b.get(p).get(team) >= System.currentTimeMillis()
+            ) {
+                DataBasePool.addPlayerToTeam(Gamingteams.INSTANCE.basePool, team, p.getUniqueId());
+                return true;
+            } else {
+                return false;
             }
         }
-        if (a.get(p).get(team) <= System.currentTimeMillis()) {
-            DataBasePool.addPlayerToTeam(Gamingteams.INSTANCE.basePool, team, p.getUniqueId());
-            return true;
-        } else return false;
+        return false;
     }
 
     public boolean hasInvite(Player p, int team) {
@@ -45,6 +46,16 @@ public class TeamManager {
             if (b.containsKey(p) && b.get(p).containsKey(team)) return true;
         }
         return false;
+    }
+
+    public void removeInvite(Player p, int team) {
+        for (HashMap<Player, HashMap<Integer, Long>> b : invites) {
+            if (
+                b.containsKey(p) && b.get(p).containsKey(team)
+            ) {
+                b.remove(p);
+            }
+        }     
     }
 
 }

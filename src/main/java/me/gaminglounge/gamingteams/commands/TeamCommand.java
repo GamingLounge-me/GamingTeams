@@ -1,12 +1,15 @@
 package me.gaminglounge.gamingteams.commands;
 
+import java.util.List;
 import java.util.UUID;
 
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.arguments.EntitySelectorArgument;
+import dev.jorel.commandapi.arguments.OfflinePlayerArgument;
 import dev.jorel.commandapi.arguments.StringArgument;
 import me.gaminglounge.gamingteams.DataBasePool;
 import me.gaminglounge.gamingteams.Gamingteams;
@@ -96,13 +99,16 @@ public class TeamCommand {
                     .withArguments(new StringArgument(Gamingteams.CONFIG.getString("Commands.Team.Arguments.name")))
                     .executesPlayer((p, args) -> {
                         String name = (String) args.get(Gamingteams.CONFIG.getString("Commands.Team.Arguments.name"));
+                        UUID uuid = p.getUniqueId();
+                        int team = DataBasePool.getTeam(Gamingteams.INSTANCE.basePool, uuid);
                         if (
+                            DataBasePool.isOwner(Gamingteams.INSTANCE.basePool, uuid, team)
+                        ) {
                             DataBasePool.setName(
                                 Gamingteams.INSTANCE.basePool,
                                 name,
-                                p.getUniqueId()
-                                )
-                        ) {
+                                uuid
+                                );
                             p.sendMessage(mm.deserialize(Gamingteams.CONFIG.getString("Messages.changeName"),
                                 Placeholder.component("name", mm.deserialize(name))
                             ));
@@ -116,15 +122,47 @@ public class TeamCommand {
                     .withArguments(new StringArgument(Gamingteams.CONFIG.getString("Commands.Team.Arguments.tag")))
                     .executesPlayer((p, args) -> {
                         String tag = (String) args.get(Gamingteams.CONFIG.getString("Commands.Team.Arguments.tag"));
+                        UUID uuid = p.getUniqueId();
+                        int team = DataBasePool.getTeam(Gamingteams.INSTANCE.basePool, uuid);
                         if (
+                            DataBasePool.isOwner(Gamingteams.INSTANCE.basePool, uuid, team)
+                        ) {
                             DataBasePool.setTag(
                                 Gamingteams.INSTANCE.basePool,
                                 tag,
                                 p.getUniqueId()
-                                )
-                        ) {
+                                );
                             p.sendMessage(mm.deserialize(Gamingteams.CONFIG.getString("Messages.changeTag"),
                                 Placeholder.component("tag", mm.deserialize(tag))
+                            ));
+                            return;
+                        }
+                        p.sendMessage(mm.deserialize(Gamingteams.CONFIG.getString("Messages.notOwner")));
+                    })
+            )
+            .withSubcommand(
+                new CommandAPICommand(Gamingteams.CONFIG.getString("Commands.Team.SubCommands.owner"))
+                    .withArguments(new OfflinePlayerArgument(Gamingteams.CONFIG.getString("Commands.Team.Arguments.player")))
+                    .executesPlayer((p, args) -> {
+                        OfflinePlayer owner = (OfflinePlayer) args.get(Gamingteams.CONFIG.getString("Commands.Team.Arguments.player"));
+                        net.kyori.adventure.text.Component name;
+                        UUID uuid = p.getUniqueId();
+                        int team = DataBasePool.getTeam(Gamingteams.INSTANCE.basePool, uuid);
+                        if (
+                            DataBasePool.isOwner(Gamingteams.INSTANCE.basePool, uuid, team)
+                        ) {
+                            DataBasePool.setOwner(
+                                Gamingteams.INSTANCE.basePool,
+                                p.getUniqueId(),
+                                owner.getUniqueId()
+                                );
+                            if (owner.isOnline()) {
+                                name = ((Player) owner).displayName();
+                            } else {
+                                name = net.kyori.adventure.text.Component.text(owner.getName());
+                            }
+                            p.sendMessage(mm.deserialize(Gamingteams.CONFIG.getString("Messages.changeOwner"),
+                                Placeholder.component("tag", name)
                             ));
                             return;
                         }
@@ -152,7 +190,48 @@ public class TeamCommand {
                         }
 
                         DataBasePool.removePlayerToTeam(Gamingteams.INSTANCE.basePool, id, uuid);
+                        Gamingteams.INSTANCE.manager.removeInvite(p, id);
                         p.sendMessage(mm.deserialize(Gamingteams.CONFIG.getString("Messages.leaftTeam")));
+                        List<OfflinePlayer> list = DataBasePool.getMembersOfflinePlayer(Gamingteams.INSTANCE.basePool, id);
+                        list.forEach(action -> {
+                            if (action.isOnline()) { 
+                                ((Player) action).sendMessage(mm.deserialize(Gamingteams.CONFIG.getString("Messages.playerLeft"),
+                                    Placeholder.component("player", p.displayName())
+                                ));
+                            }
+                        });
+                    })
+            )
+            .withSubcommand(
+                new CommandAPICommand(Gamingteams.CONFIG.getString("Commands.Team.SubCommands.join"))
+                    .withArguments(new StringArgument(Gamingteams.CONFIG.getString("Commands.Team.Arguments.teams"))) 
+                    .executesPlayer((p, args) -> {
+                        String name = (String) args.get(Gamingteams.CONFIG.getString("Commands.Team.Arguments.teams"));
+                        UUID uuid = p.getUniqueId();
+                        int id = DataBasePool.getTeam(Gamingteams.INSTANCE.basePool, uuid);
+                        if (id != 0) {
+                            p.sendMessage(mm.deserialize(Gamingteams.CONFIG.getString("Messages.alreadyInTeam")));
+                            return;
+                        }
+                        id = DataBasePool.getTeam(Gamingteams.INSTANCE.basePool, name);
+                        if (id == 0) {
+                            p.sendMessage(mm.deserialize(Gamingteams.CONFIG.getString("Messages.noTeam")));
+                            return;
+                        }
+
+                        if (Gamingteams.INSTANCE.manager.accept(p, id)) {
+                            List<OfflinePlayer> list = DataBasePool.getMembersOfflinePlayer(Gamingteams.INSTANCE.basePool, id);
+                            list.forEach(action -> {
+                                if (action.isOnline()) { 
+                                    ((Player) action).sendMessage(mm.deserialize(Gamingteams.CONFIG.getString("Messages.playerJoined"),
+                                        Placeholder.component("player", p.displayName())
+                                    ));
+                                }
+                            });
+                        } else {
+                            p.sendMessage(mm.deserialize(Gamingteams.CONFIG.getString("Messages.noInvite")));
+                        }
+                        
                     })
             )
             .withSubcommand(
@@ -168,12 +247,24 @@ public class TeamCommand {
                                     return;
                                 }
 
-                                int team = DataBasePool.getTeam(Gamingteams.INSTANCE.basePool, p.getUniqueId());
+                                UUID uuid = p.getUniqueId();
+                                int team = DataBasePool.getTeam(Gamingteams.INSTANCE.basePool, uuid);
                                 if (team == 0) {
                                     p.sendMessage(mm.deserialize(Gamingteams.CONFIG.getString("Messages.notInATeam")));
                                     return;
                                 }
-                                if (Gamingteams.INSTANCE.manager.invite(p, team)) {
+
+                                if (
+                                    !DataBasePool.isOwner(
+                                        Gamingteams.INSTANCE.basePool,
+                                        uuid,
+                                        team)
+                                ) {
+                                    p.sendMessage(mm.deserialize(Gamingteams.CONFIG.getString("Messages.notOwner")));
+                                    return;                                    
+                                }
+
+                                if (Gamingteams.INSTANCE.manager.invite(i, team)) {
                                     String name = DataBasePool.getName(Gamingteams.INSTANCE.basePool, team);
                                     p.sendMessage(mm.deserialize(Gamingteams.CONFIG.getString("Messages.invitedPlayer"),
                                         Placeholder.component("player", i.displayName())
@@ -181,14 +272,16 @@ public class TeamCommand {
                                     i.sendMessage(mm.deserialize(Gamingteams.CONFIG.getString("Messages.invited"),
                                         Placeholder.component("name", mm.deserialize(name))
                                     ));
+                                } else {
+                                    p.sendMessage(mm.deserialize(Gamingteams.CONFIG.getString("Messages.alreadyInvited")));
                                 }
                             })
                         )
                     .withSubcommand(
                         new CommandAPICommand(Gamingteams.CONFIG.getString("Commands.Team.SubCommands.remove"))
-                            .withArguments(new EntitySelectorArgument.OnePlayer(Gamingteams.CONFIG.getString("Commands.Team.Arguments.player")))
+                            .withArguments(new OfflinePlayerArgument(Gamingteams.CONFIG.getString("Commands.Team.Arguments.player")))
                             .executesPlayer((p, args) -> {
-                                Player i = (Player) args.get(Gamingteams.CONFIG.getString("Commands.Team.Arguments.player"));
+                                OfflinePlayer i = (OfflinePlayer) args.get(Gamingteams.CONFIG.getString("Commands.Team.Arguments.player"));
                                 UUID uuid = i.getUniqueId();
 
                                 if (p == i) {
@@ -202,12 +295,31 @@ public class TeamCommand {
                                 int team = DataBasePool.getTeam(Gamingteams.INSTANCE.basePool, uuid);
                                 if (team == 0) p.sendMessage(mm.deserialize(Gamingteams.CONFIG.getString("Messages.cannotRemovePlayer")));
 
-                                if (!DataBasePool.isOwner(Gamingteams.INSTANCE.basePool, uuid, yourTeam)) {
+                                if (team != yourTeam) {
+                                    p.sendMessage(mm.deserialize(Gamingteams.CONFIG.getString("Messages.nowInYourTeam")));
+                                    return;
+                                }
+
+                                if (!DataBasePool.isOwner(Gamingteams.INSTANCE.basePool, p.getUniqueId(), yourTeam)) {
                                     p.sendMessage(mm.deserialize(Gamingteams.CONFIG.getString("Messages.notOwner")));
                                     return;
                                 }
 
                                 DataBasePool.removePlayerToTeam(Gamingteams.INSTANCE.basePool, yourTeam, uuid);
+                                Gamingteams.INSTANCE.manager.removeInvite(p, team);
+                                if (i.isOnline()) { 
+                                    ((Player) i).sendMessage(mm.deserialize(Gamingteams.CONFIG.getString("Messages.playerRemoved"),
+                                        Placeholder.component("player", p.displayName())
+                                    ));
+                                }
+                                List<OfflinePlayer> list = DataBasePool.getMembersOfflinePlayer(Gamingteams.INSTANCE.basePool, team);
+                                list.forEach(action -> {
+                                    if (action.isOnline()) { 
+                                        ((Player) action).sendMessage(mm.deserialize(Gamingteams.CONFIG.getString("Messages.playerRemoved"),
+                                            Placeholder.component("player", p.displayName())
+                                        ));
+                                    }
+                                });
 
                             })
                         )

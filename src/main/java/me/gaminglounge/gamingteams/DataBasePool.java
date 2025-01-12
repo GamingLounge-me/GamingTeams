@@ -7,8 +7,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.UUID;
+
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -144,7 +149,7 @@ public class DataBasePool {
         }
     }
 
-    public static boolean setName(DataBasePool pool, String name, UUID player) {
+    public static void setName(DataBasePool pool, String name, UUID player) {
         String querry = "UPDATE `teams` SET `teams`.`name` = ? WHERE `teams`.`owner` = ?;";
         try {
             Connection con = pool.getConnection();
@@ -154,10 +159,8 @@ public class DataBasePool {
             sel.executeQuery();
             sel.close();
             con.close();
-            return true;
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
         }
     }
 
@@ -262,11 +265,12 @@ public class DataBasePool {
     }
 
     public static boolean isOwner(DataBasePool pool, UUID owner, int team) {
-        String querry = "SELECT `teams`.`owner` FROM `teams` WHERE `teams`.`id` = ?;";
+        String querry = "SELECT `teams`.`owner` FROM `teams` WHERE `teams`.`id` = ? AND `teams`.`owner` = ?;";
         try {
             Connection con = pool.getConnection();
             PreparedStatement sel = con.prepareStatement(querry);
             sel.setObject(1, team);
+            sel.setObject(2, owner);
             ResultSet res = sel.executeQuery();
             boolean isOwner = res.first();
             sel.close();
@@ -290,6 +294,69 @@ public class DataBasePool {
             con.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+
+    public static List<UUID> getMembersUUIDs(DataBasePool pool, int team) {
+        String querry = "SELECT `player`.`player` FROM `player` WHERE `teams`.`id` = ?;";
+        try {
+            Connection con = pool.getConnection();
+            PreparedStatement sel = con.prepareStatement(querry);
+            sel.setObject(1, team);
+            ResultSet res = sel.executeQuery();
+            List<UUID> player = new ArrayList<>();
+            res.first();
+            while (res.next()) {
+                player.add((UUID) res.getObject("player"));
+            } 
+            sel.close();
+            con.close();
+            return player;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static List<OfflinePlayer> getMembersOfflinePlayer(DataBasePool pool, int team) {
+        String querry = "SELECT `player`.`player` FROM `player` WHERE `player`.`id` = ?;";
+        try {
+            Connection con = pool.getConnection();
+            PreparedStatement sel = con.prepareStatement(querry);
+            sel.setObject(1, team);
+            ResultSet res = sel.executeQuery();
+            List<OfflinePlayer> player = new ArrayList<>();
+            res.first();
+            player.add(Bukkit.getOfflinePlayer((UUID) res.getObject("player")));
+            while (res.next()) {
+                player.add(Bukkit.getOfflinePlayer((UUID) res.getObject("player")));
+            } 
+            sel.close();
+            con.close();
+            return player;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static List<String> getTeamsName(DataBasePool pool) {
+        String querry = "SELECT `teams`.`name` FROM `teams`;";
+        try {
+            Connection con = pool.getConnection();
+            PreparedStatement sel = con.prepareStatement(querry);
+            ResultSet res = sel.executeQuery();
+            List<String> teams = new ArrayList<>();
+            res.first();
+            while (res.next()) {
+                teams.add(res.getString("name"));
+            } 
+            sel.close();
+            con.close();
+            return teams;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 
