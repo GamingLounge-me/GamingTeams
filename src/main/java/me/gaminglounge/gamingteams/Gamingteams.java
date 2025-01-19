@@ -1,6 +1,9 @@
 package me.gaminglounge.gamingteams;
  
+import java.io.InputStream;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.PluginManager; 
@@ -8,6 +11,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPIBukkitConfig;
+import me.gaminglounge.configapi.LoadConfig;
 import me.gaminglounge.gamingteams.commands.TeamCommand; 
  
 public final class Gamingteams extends JavaPlugin { 
@@ -32,6 +36,10 @@ public final class Gamingteams extends JavaPlugin {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+
+        Map<String, InputStream> lang = new HashMap<>();
+        lang.put("en_US.json", this.getResource("lang/en_US.json"));
+        LoadConfig.registerLanguage(this, lang);
 
         manager = new TeamManager();
 

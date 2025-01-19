@@ -15,6 +15,9 @@ repositories {
         name = "sonatype"
         url = "https://oss.sonatype.org/content/groups/public/"
     }
+    maven {
+        url = "https://maven.enginehub.org/repo/"
+    }
 }
 
 dependencies {
@@ -24,6 +27,10 @@ dependencies {
     implementation('org.mariadb.jdbc:mariadb-java-client:3.3.2') {
         exclude group: 'com.github.waffle', module: 'waffle-jna'
     }
+    compileOnly files("build/libs/ConfigAPI-0.0.jar")
+    compileOnly files("build/libs/GuiAPI-0.0.jar")
+    compileOnly files("build/libs/ItemBuilder-0.0.jar")
+    compileOnly ('com.sk89q.worldguard:worldguard-bukkit:7.0.13-SNAPSHOT')
 }
 
 def targetJavaVersion = 21 // probaly need to change manuelly

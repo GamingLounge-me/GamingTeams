@@ -183,6 +183,25 @@ public class DataBasePool {
         }
     }
 
+    public static String getTag(DataBasePool pool, int id) {
+        String querry = "SELECT `teams`.`tag` FROM `teams` WHERE `teams`.`id` = ?;";
+
+        try {
+            Connection con = pool.getConnection();
+            PreparedStatement sel = con.prepareStatement(querry);
+            sel.setObject(1, id);
+            ResultSet res = sel.executeQuery();
+            res.first();
+            String tag = res.getString("tag");
+            sel.close();
+            con.close();
+            return tag;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public static void addPlayerToTeam(DataBasePool pool, int team, UUID playerUUID) {
         String querry = "INSERT INTO `player` (`id`, `player`) VALUES (?, ?);";
         try {
@@ -281,6 +300,25 @@ public class DataBasePool {
             return false;
         }
     }
+    
+    public static OfflinePlayer getOwner(DataBasePool pool, int team) {
+        String querry = "SELECT `teams`.`owner` FROM `teams` WHERE `teams`.`id` = ?;";
+        try {
+            Connection con = pool.getConnection();
+            PreparedStatement sel = con.prepareStatement(querry);
+            sel.setObject(1, team);
+            ResultSet res = sel.executeQuery();
+            res.first();
+            OfflinePlayer owner = Bukkit.getOfflinePlayer((UUID) res.getObject("owner"));
+            sel.close();
+            con.close();
+            return owner;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 
     public static void removePlayerToTeam(DataBasePool pool, int team, UUID playerUUID) {
         String querry = "DELETE FROM `player` WHERE player.id = ? AND player.player = ?;";

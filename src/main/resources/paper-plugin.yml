@@ -6,3 +6,21 @@ description:
 api-version: "1.21.4"
 authors:
   - "Jon1Games"
+dependencies:
+  server:
+    ConfigAPI:
+      load: BEFORE
+      required: true
+      join-classpath: true
+    GuiAPI:
+      load: BEFORE
+      required: true
+      join-classpath: true
+    ItemBuilder:
+      load: BEFORE
+      required: true
+      join-classpath: true
+    WorldGuard:
+      load: BEFORE
+      required: false
+      join-classpath: true
