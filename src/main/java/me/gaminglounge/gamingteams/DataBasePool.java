@@ -74,11 +74,11 @@ public class DataBasePool {
     public void createTableTeams() throws SQLException {
         Connection con = getConnection();
         String sqlCreate = "CREATE TABLE IF NOT EXISTS teams (" +
-            "id INTEGER AUTO_INCREMENT PRIMARY KEY NOT NULL," +
-            "name VARCHAR(128) NOT NULL," +
-            "owner UUID NOT NULL," +
-            "tag VARCHAR(16) NOT NULL)" +
-            "ENGINE = InnoDB;";
+                "id INTEGER AUTO_INCREMENT PRIMARY KEY NOT NULL," +
+                "name VARCHAR(128) NOT NULL," +
+                "owner UUID NOT NULL," +
+                "tag VARCHAR(16) NOT NULL)" +
+                "ENGINE = InnoDB;";
 
         Statement stmt = con.createStatement();
         stmt.execute(sqlCreate);
@@ -87,15 +87,15 @@ public class DataBasePool {
     public void createTablePlayer() throws SQLException {
         Connection con = getConnection();
         String sqlCreate = "CREATE TABLE IF NOT EXISTS player (" +
-            "id INTEGER NOT NULL," +
-            "player UUID NOT NULL)" +
-            "ENGINE = InnoDB;";
+                "id INTEGER NOT NULL," +
+                "player UUID NOT NULL)" +
+                "ENGINE = InnoDB;";
 
         Statement stmt = con.createStatement();
         stmt.execute(sqlCreate);
     }
 
-        public static int addTeam(DataBasePool pool, UUID owner, String name, String tag) {
+    public static int addTeam(DataBasePool pool, UUID owner, String name, String tag) {
         String querry = "INSERT INTO `teams` (`owner`, `name`, `tag`) VALUES (?, ?, ?) RETURNING `teams`.`id`;";
         try {
             Connection con = pool.getConnection();
@@ -300,7 +300,7 @@ public class DataBasePool {
             return false;
         }
     }
-    
+
     public static OfflinePlayer getOwner(DataBasePool pool, int team) {
         String querry = "SELECT `teams`.`owner` FROM `teams` WHERE `teams`.`id` = ?;";
         try {
@@ -319,7 +319,6 @@ public class DataBasePool {
         }
     }
 
-
     public static void removePlayerToTeam(DataBasePool pool, int team, UUID playerUUID) {
         String querry = "DELETE FROM `player` WHERE player.id = ? AND player.player = ?;";
         try {
@@ -336,7 +335,7 @@ public class DataBasePool {
     }
 
     public static List<UUID> getMembersUUIDs(DataBasePool pool, int team) {
-        String querry = "SELECT `player`.`player` FROM `player` WHERE `teams`.`id` = ?;";
+        String querry = "SELECT `player`.`player` FROM `player` WHERE `player`.`id` = ?;";
         try {
             Connection con = pool.getConnection();
             PreparedStatement sel = con.prepareStatement(querry);
@@ -344,9 +343,10 @@ public class DataBasePool {
             ResultSet res = sel.executeQuery();
             List<UUID> player = new ArrayList<>();
             res.first();
+            player.add((UUID) res.getObject("player"));
             while (res.next()) {
                 player.add((UUID) res.getObject("player"));
-            } 
+            }
             sel.close();
             con.close();
             return player;
@@ -368,7 +368,7 @@ public class DataBasePool {
             player.add(Bukkit.getOfflinePlayer((UUID) res.getObject("player")));
             while (res.next()) {
                 player.add(Bukkit.getOfflinePlayer((UUID) res.getObject("player")));
-            } 
+            }
             sel.close();
             con.close();
             return player;
@@ -388,7 +388,7 @@ public class DataBasePool {
             res.first();
             while (res.next()) {
                 teams.add(res.getString("name"));
-            } 
+            }
             sel.close();
             con.close();
             return teams;

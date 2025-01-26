@@ -8,15 +8,16 @@ import org.bukkit.entity.Player;
 
 public class TeamManager {
 
-    // Player = Invited Player, integer = Team ID, Long = Timeout Invite 
-    private List<HashMap<Player, HashMap<Integer, Long>>>  invites;
+    // Player = Invited Player, integer = Team ID, Long = Timeout Invite
+    private List<HashMap<Player, HashMap<Integer, Long>>> invites;
 
     public TeamManager() {
         invites = new ArrayList<>();
     }
 
     public boolean invite(Player p, int team) {
-        if (hasInvite(p, team)) return false;
+        if (hasInvite(p, team))
+            return false;
         HashMap<Player, HashMap<Integer, Long>> a = new HashMap<>();
         HashMap<Integer, Long> b = new HashMap<>();
         b.put(team, System.currentTimeMillis() + (300 * 1_000));
@@ -28,10 +29,8 @@ public class TeamManager {
 
     public boolean accept(Player p, int team) {
         for (HashMap<Player, HashMap<Integer, Long>> b : invites) {
-            if (
-                b.containsKey(p) && b.get(p).containsKey(team) &&
-                b.get(p).get(team) >= System.currentTimeMillis()
-            ) {
+            if (b.containsKey(p) && b.get(p).containsKey(team) &&
+                    b.get(p).get(team) >= System.currentTimeMillis()) {
                 DataBasePool.addPlayerToTeam(Gamingteams.INSTANCE.basePool, team, p.getUniqueId());
                 return true;
             } else {
@@ -43,19 +42,33 @@ public class TeamManager {
 
     public boolean hasInvite(Player p, int team) {
         for (HashMap<Player, HashMap<Integer, Long>> b : invites) {
-            if (b.containsKey(p) && b.get(p).containsKey(team)) return true;
+            if (b.containsKey(p) && b.get(p).containsKey(team))
+                return true;
         }
         return false;
     }
 
     public void removeInvite(Player p, int team) {
         for (HashMap<Player, HashMap<Integer, Long>> b : invites) {
-            if (
-                b.containsKey(p) && b.get(p).containsKey(team)
-            ) {
-                b.remove(p);
+            if (b.containsKey(p) && b.get(p).containsKey(team)) {
+                invites.remove(b);
             }
-        }     
+        }
+    }
+
+    public List<Integer> listInvites(Player p) {
+        List<Integer> a = new ArrayList<>();
+        for (HashMap<Player, HashMap<Integer, Long>> b : invites) {
+            if (b.containsKey(p)) {
+                HashMap<Integer, Long> c = b.get(p);
+                for (int id : c.keySet()) {
+                    if (c.get(id) >= System.currentTimeMillis()) {
+                        a.add(id);
+                    }
+                }
+            }
+        }
+        return a;
     }
 
 }

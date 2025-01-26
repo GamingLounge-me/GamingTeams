@@ -1,29 +1,29 @@
 package me.gaminglounge.gamingteams;
- 
+
 import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.plugin.PluginManager; 
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPIBukkitConfig;
 import me.gaminglounge.configapi.LoadConfig;
-import me.gaminglounge.gamingteams.commands.TeamCommand; 
- 
-public final class Gamingteams extends JavaPlugin { 
- 
-    public static Gamingteams INSTANCE; 
+import me.gaminglounge.gamingteams.commands.TeamCommand;
+
+public final class Gamingteams extends JavaPlugin {
+
+    public static Gamingteams INSTANCE;
     public static FileConfiguration CONFIG;
     public static TeamManager manager;
     public DataBasePool basePool;
- 
+
     @Override
     public void onLoad() {
-        INSTANCE = this; 
+        INSTANCE = this;
         this.saveDefaultConfig();
         CONFIG = this.getConfig();
 
@@ -41,9 +41,12 @@ public final class Gamingteams extends JavaPlugin {
         lang.put("en_US.json", this.getResource("lang/en_US.json"));
         LoadConfig.registerLanguage(this, lang);
 
+        new Events();
+
         manager = new TeamManager();
 
-        if (!CommandAPI.isLoaded()) CommandAPI.onLoad(new CommandAPIBukkitConfig(this));
+        if (!CommandAPI.isLoaded())
+            CommandAPI.onLoad(new CommandAPIBukkitConfig(this));
         new TeamCommand();
     }
 
@@ -54,12 +57,12 @@ public final class Gamingteams extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        
+
     }
 
     public void listener() {
         PluginManager pm = getServer().getPluginManager();
 
         // pm.registerEvents(new InvClickEvent(), this);
-    } 
-} 
+    }
+}

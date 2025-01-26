@@ -24,3 +24,7 @@ dependencies:
       load: BEFORE
       required: false
       join-classpath: true
+    PlayerInputAPI:
+      load: BEFORE
+      required: false
+      join-classpath: true

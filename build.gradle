@@ -30,6 +30,7 @@ dependencies {
     compileOnly files("build/libs/ConfigAPI-0.0.jar")
     compileOnly files("build/libs/GuiAPI-0.0.jar")
     compileOnly files("build/libs/ItemBuilder-0.0.jar")
+    compileOnly files("build/libs/PlayerInputAPI-0.0.jar")
     compileOnly ('com.sk89q.worldguard:worldguard-bukkit:7.0.13-SNAPSHOT')
 }
 
