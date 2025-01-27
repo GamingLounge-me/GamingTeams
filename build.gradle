@@ -18,6 +18,9 @@ repositories {
     maven {
         url = "https://maven.enginehub.org/repo/"
     }
+    maven {
+        url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/'
+    }
 }
 
 dependencies {
@@ -32,6 +35,7 @@ dependencies {
     compileOnly files("build/libs/ItemBuilder-0.0.jar")
     compileOnly files("build/libs/PlayerInputAPI-0.0.jar")
     compileOnly ('com.sk89q.worldguard:worldguard-bukkit:7.0.13-SNAPSHOT')
+    compileOnly ('me.clip:placeholderapi:2.11.6')
 }
 
 def targetJavaVersion = 21 // probaly need to change manuelly
