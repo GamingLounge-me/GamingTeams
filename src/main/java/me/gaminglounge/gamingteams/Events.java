@@ -50,7 +50,9 @@ public class Events {
                 if (isOwner(p, id)) {
                     p.openInventory(
                             new ErrorGUI(tg.getInventory(), p,
-                                    mm.deserialize(Language.getValue(Gamingteams.INSTANCE, p, "ownerCannotLeave")))
+                                    mm.deserialize(Language.getValue(
+                                            Gamingteams.INSTANCE, p,
+                                            "ownerCannotLeave")))
                                     .getInventory());
                     return;
                 }
@@ -64,7 +66,8 @@ public class Events {
                 list.forEach(action -> {
                     if (action.isOnline()) {
                         ((Player) action).sendMessage(mm.deserialize(
-                                Language.getValue(Gamingteams.INSTANCE, p, "playerLeft", true),
+                                Language.getValue(Gamingteams.INSTANCE, (Player) action, "playerLeft",
+                                        true),
                                 Placeholder.component("player", p.displayName())));
                     }
                 });
@@ -108,7 +111,9 @@ public class Events {
                                         tg.teamID,
                                         p.getUniqueId());
                                 p.sendMessage(mm.deserialize(
-                                        Language.getValue(Gamingteams.INSTANCE, tg.p, "removedTeam", true)));
+                                        Language.getValue(Gamingteams.INSTANCE,
+                                                tg.p, "removedTeam",
+                                                true)));
                             }).getInventory());
                     return;
                 }
@@ -116,7 +121,9 @@ public class Events {
                 Player p = (Player) e.getWhoClicked();
                 p.openInventory(
                         new ErrorGUI(e.getInventory(), p,
-                                mm.deserialize(Language.getValue(Gamingteams.INSTANCE, p, "notOwner"))).getInventory());
+                                mm.deserialize(Language.getValue(Gamingteams.INSTANCE,
+                                        p, "notOwner")))
+                                .getInventory());
 
             }
         });
@@ -130,29 +137,38 @@ public class Events {
                 String exit = Language.getValue(Gamingteams.INSTANCE, p, "chatinput.exit");
                 new UseNextChatInput(p)
                         .sendMessage(mm.deserialize(
-                                Language.getValue(Gamingteams.INSTANCE, p, "chatinput.changename.question", true),
+                                Language.getValue(Gamingteams.INSTANCE, p,
+                                        "chatinput.changename.question", true),
                                 Placeholder.component("exit", Component.text(exit))))
                         .setChatEvent((event, name) -> {
                             UUID uuid = p.getUniqueId();
                             if (name.equalsIgnoreCase(exit)) {
                                 p.sendMessage(
-                                        mm.deserialize(Language.getValue(Gamingteams.INSTANCE, p, "chatinput.cancel")));
+                                        mm.deserialize(Language.getValue(
+                                                Gamingteams.INSTANCE, p,
+                                                "chatinput.cancel")));
                                 return;
                             }
 
-                            if (DataBasePool.isOwner(Gamingteams.INSTANCE.basePool, uuid, tg.teamID)) {
+                            if (DataBasePool.isOwner(Gamingteams.INSTANCE.basePool, uuid,
+                                    tg.teamID)) {
                                 DataBasePool.setName(
                                         Gamingteams.INSTANCE.basePool,
                                         name,
                                         uuid);
-                                Bukkit.getScheduler().runTask(Gamingteams.INSTANCE, () -> {
-                                    p.openInventory(new TeamGUI(p).getInventory());
-                                });
+                                Bukkit.getScheduler().runTask(Gamingteams.INSTANCE,
+                                        () -> {
+                                            p.openInventory(new TeamGUI(p)
+                                                    .getInventory());
+                                        });
                                 return;
                             }
                             p.openInventory(
                                     new ErrorGUI(inv, p, mm.deserialize(
-                                            Language.getValue(Gamingteams.INSTANCE, p, "notOwner", true)))
+                                            Language.getValue(
+                                                    Gamingteams.INSTANCE,
+                                                    p, "notOwner",
+                                                    true)))
                                             .getInventory());
                         })
                         .capture();
@@ -167,29 +183,38 @@ public class Events {
                 String exit = Language.getValue(Gamingteams.INSTANCE, p, "chatinput.exit");
                 new UseNextChatInput(p)
                         .sendMessage(mm.deserialize(
-                                Language.getValue(Gamingteams.INSTANCE, p, "chatinput.changename.question", true),
+                                Language.getValue(Gamingteams.INSTANCE, p,
+                                        "chatinput.changename.question", true),
                                 Placeholder.component("exit", Component.text(exit))))
                         .setChatEvent((event, name) -> {
                             UUID uuid = p.getUniqueId();
                             if (name.equalsIgnoreCase(exit)) {
                                 p.sendMessage(
-                                        mm.deserialize(Language.getValue(Gamingteams.INSTANCE, p, "chatinput.cancel")));
+                                        mm.deserialize(Language.getValue(
+                                                Gamingteams.INSTANCE, p,
+                                                "chatinput.cancel")));
                                 return;
                             }
 
-                            if (DataBasePool.isOwner(Gamingteams.INSTANCE.basePool, uuid, tg.teamID)) {
+                            if (DataBasePool.isOwner(Gamingteams.INSTANCE.basePool, uuid,
+                                    tg.teamID)) {
                                 DataBasePool.setTag(
                                         Gamingteams.INSTANCE.basePool,
                                         name,
                                         uuid);
-                                Bukkit.getScheduler().runTask(Gamingteams.INSTANCE, () -> {
-                                    p.openInventory(new TeamGUI(p).getInventory());
-                                });
+                                Bukkit.getScheduler().runTask(Gamingteams.INSTANCE,
+                                        () -> {
+                                            p.openInventory(new TeamGUI(p)
+                                                    .getInventory());
+                                        });
                                 return;
                             }
                             p.openInventory(
                                     new ErrorGUI(inv, p, mm.deserialize(
-                                            Language.getValue(Gamingteams.INSTANCE, p, "notOwner", true)))
+                                            Language.getValue(
+                                                    Gamingteams.INSTANCE,
+                                                    p, "notOwner",
+                                                    true)))
                                             .getInventory());
                         })
                         .capture();
@@ -215,7 +240,8 @@ public class Events {
         ItemBuilderManager.addBothClickEvent("GamingTeams:open_player_list", (e) -> {
             e.setCancelled(true);
             if (e.getInventory().getHolder() instanceof TeamGUI tg) {
-                List<UUID> list = DataBasePool.getMembersUUIDs(Gamingteams.INSTANCE.basePool, tg.teamID);
+                List<UUID> list = DataBasePool.getMembersUUIDs(Gamingteams.INSTANCE.basePool,
+                        tg.teamID);
                 List<ItemStack> items = new ArrayList<>();
 
                 for (UUID a : list) {
@@ -227,7 +253,8 @@ public class Events {
                     items.add(
                             new ItemBuilder(a)
                                     .setName(Component.text(prof.getName()))
-                                    .addBothClickEvent("GamingTeams:open_player_management")
+                                    .addBothClickEvent(
+                                            "GamingTeams:open_player_management")
                                     .build());
                 }
 
@@ -240,7 +267,9 @@ public class Events {
                         0,
                         new ItemBuilder(Material.SKELETON_SKULL)
                                 .setName(mm
-                                        .deserialize(Language.getValue(Gamingteams.INSTANCE, (Player) e.getWhoClicked(),
+                                        .deserialize(Language.getValue(
+                                                Gamingteams.INSTANCE,
+                                                (Player) e.getWhoClicked(),
                                                 "InvitePlayer")))
                                 .addBothClickEvent("GamingTeams:invite_player")
                                 .build());
@@ -280,23 +309,32 @@ public class Events {
             if (p.isOnline()) {
                 if (!Gamingteams.INSTANCE.manager.invite((Player) p, team)) {
                     e.getWhoClicked().openInventory(
-                            new ErrorGUI(e.getInventory(), (Player) e.getWhoClicked(), mm.deserialize(
-                                    Language.getValue(Gamingteams.INSTANCE, (Player) e.getWhoClicked(),
-                                            "alreadyHasInvite"),
-                                    Placeholder.component("player", ((Player) p).displayName())))
+                            new ErrorGUI(e.getInventory(), (Player) e.getWhoClicked(),
+                                    mm.deserialize(
+                                            Language.getValue(
+                                                    Gamingteams.INSTANCE,
+                                                    (Player) e.getWhoClicked(),
+                                                    "alreadyHasInvite"),
+                                            Placeholder.component("player",
+                                                    ((Player) p).displayName())))
                                     .getInventory());
                     return;
                 }
                 ((Player) p).sendMessage(
-                        mm.deserialize(Language.getValue(Gamingteams.INSTANCE, (Player) p, "gotTeamInvite", true)));
+                        mm.deserialize(Language.getValue(Gamingteams.INSTANCE, (Player) p,
+                                "gotTeamInvite", true)));
                 if (e.getInventory().getHolder() instanceof Pagenation pg) {
                     pg.removeItem(e.getCurrentItem());
                     pg.refeshPage();
                 }
                 e.getWhoClicked().openInventory(
-                        new ErrorGUI(e.getInventory(), (Player) e.getWhoClicked(), mm.deserialize(
-                                Language.getValue(Gamingteams.INSTANCE, (Player) e.getWhoClicked(), "invitedPlayer"),
-                                Placeholder.component("player", ((Player) p).displayName())))
+                        new ErrorGUI(e.getInventory(), (Player) e.getWhoClicked(),
+                                mm.deserialize(
+                                        Language.getValue(Gamingteams.INSTANCE,
+                                                (Player) e.getWhoClicked(),
+                                                "invitedPlayer"),
+                                        Placeholder.component("player",
+                                                ((Player) p).displayName())))
                                 .getInventory());
             }
         });
@@ -308,7 +346,8 @@ public class Events {
 
             for (int id : invites) {
                 ItemStack tmp = new ItemBuilder(Material.GREEN_BANNER)
-                        .setName(mm.deserialize(DataBasePool.getName(Gamingteams.INSTANCE.basePool, id)))
+                        .setName(mm.deserialize(DataBasePool
+                                .getName(Gamingteams.INSTANCE.basePool, id)))
                         .addBothClickEvent("GamingTeams:join_team")
                         .build();
 
@@ -331,28 +370,35 @@ public class Events {
         ItemBuilderManager.addBothClickEvent("GamingTeams:join_team", (e) -> {
             if (e.getInventory().getHolder() instanceof Pagenation pg) {
                 e.setCancelled(true);
-                PersistentDataContainer container = e.getCurrentItem().getItemMeta().getPersistentDataContainer();
+                PersistentDataContainer container = e.getCurrentItem().getItemMeta()
+                        .getPersistentDataContainer();
                 if (container.has(joinID)) {
                     Player p = (Player) e.getWhoClicked();
                     int id = container.get(joinID, PersistentDataType.INTEGER);
                     if (Gamingteams.INSTANCE.manager.accept(p, id)) {
                         p.closeInventory();
-                        List<OfflinePlayer> list = DataBasePool.getMembersOfflinePlayer(Gamingteams.INSTANCE.basePool,
+                        List<OfflinePlayer> list = DataBasePool.getMembersOfflinePlayer(
+                                Gamingteams.INSTANCE.basePool,
                                 id);
                         list.forEach(action -> {
                             if (action.isOnline()) {
                                 ((Player) action).sendMessage(mm.deserialize(
-                                        Language.getValue(Gamingteams.INSTANCE, p, "playerJoined",
+                                        Language.getValue(Gamingteams.INSTANCE,
+                                                p, "playerJoined",
                                                 true),
-                                        Placeholder.component("player", p.displayName())));
+                                        Placeholder.component("player",
+                                                p.displayName())));
                             }
                         });
                     } else {
+                        System.err.println(id);
                         pg.removeItem(e.getCurrentItem());
                         pg.refeshPage();
                         p.openInventory(
                                 new ErrorGUI(e.getInventory(), p,
-                                        mm.deserialize(Language.getValue(Gamingteams.INSTANCE, p, "noInvite")))
+                                        mm.deserialize(Language.getValue(
+                                                Gamingteams.INSTANCE, p,
+                                                "noInvite")))
                                         .getInventory());
                     }
                 }
@@ -371,46 +417,61 @@ public class Events {
             if (e.getInventory().getHolder() instanceof PlayerManagement pm) {
                 OfflinePlayer p = pm.target;
 
-                DataBasePool.removePlayerToTeam(Gamingteams.INSTANCE.basePool, pm.teamID, p.getUniqueId());
-                if (p.isOnline()) {
-                    Gamingteams.INSTANCE.manager.removeInvite((Player) p, pm.teamID);
-                }
-                e.getWhoClicked().openInventory(pm.returnInv);
+                List<OfflinePlayer> list = DataBasePool
+                        .getMembersOfflinePlayer(Gamingteams.INSTANCE.basePool, pm.teamID);
+                DataBasePool.removePlayerToTeam(Gamingteams.INSTANCE.basePool, pm.teamID,
+                        p.getUniqueId());
+                Gamingteams.INSTANCE.manager.removeInvite((Player) p, pm.teamID);
+                list.forEach(action -> {
+                    if (action.isOnline()) {
+                        ((Player) action).sendMessage(mm.deserialize(
+                                Language.getValue(Gamingteams.INSTANCE, (Player) action,
+                                        "playerLeft",
+                                        true),
+                                Placeholder.component("player",
+                                        Component.text(p.getName()))));
+                    }
+                });
                 if (pm.returnInv instanceof Pagenation pg) {
                     pg.removeItem(e.getCurrentItem());
                     pg.refeshPage();
                 }
+                e.getWhoClicked().openInventory(pm.returnInv);
             }
         });
 
         ItemBuilderManager.addBothClickEvent("GamingTeams:open_player_management", (e) -> {
             e.setCancelled(true);
 
-            if (e.getInventory().getHolder() instanceof TeamGUI tg) {
-                Player p = (Player) e.getWhoClicked();
-                SkullMeta skull = (SkullMeta) e.getCurrentItem().getItemMeta();
+            Player p = (Player) e.getWhoClicked();
+            int id = DataBasePool.getTeam(Gamingteams.INSTANCE.basePool, p.getUniqueId());
+            SkullMeta skull = (SkullMeta) e.getCurrentItem().getItemMeta();
 
-                if (p == skull.getOwningPlayer()) {
-                    p.openInventory(
-                            new ErrorGUI(e.getInventory(), p,
-                                    mm.deserialize(Language.getValue(Gamingteams.INSTANCE, p, "noOpenSelf")))
-                                    .getInventory());
-                    return;
-                }
-
-                if (!isOwner(p, tg.teamID)) {
-                    p.openInventory(
-                            new ErrorGUI(e.getInventory(), p,
-                                    mm.deserialize(Language.getValue(Gamingteams.INSTANCE, p, "notOwner")))
-                                    .getInventory());
-                    return;
-                }
-
-                int id = DataBasePool.getTeam(Gamingteams.INSTANCE.basePool, e.getWhoClicked().getUniqueId());
-                e.getWhoClicked().openInventory(
-                        new PlayerManagement((Player) e.getWhoClicked(), skull.getOwningPlayer(), id, e.getInventory())
+            if (skull.getOwningPlayer() != null && skull.getOwningPlayer().isOnline()
+                    && p == (Player) skull.getOwningPlayer()) {
+                p.openInventory(
+                        new ErrorGUI(e.getInventory(), p,
+                                mm.deserialize(Language.getValue(
+                                        Gamingteams.INSTANCE, p,
+                                        "noOpenSelf")))
                                 .getInventory());
+                return;
             }
+
+            if (!isOwner(p, id)) {
+                p.openInventory(
+                        new ErrorGUI(e.getInventory(), p,
+                                mm.deserialize(Language.getValue(
+                                        Gamingteams.INSTANCE, p,
+                                        "notOwner")))
+                                .getInventory());
+                return;
+            }
+
+            e.getWhoClicked().openInventory(
+                    new PlayerManagement((Player) e.getWhoClicked(),
+                            skull.getOwningPlayer(), id, e.getInventory())
+                            .getInventory());
         });
 
     }
