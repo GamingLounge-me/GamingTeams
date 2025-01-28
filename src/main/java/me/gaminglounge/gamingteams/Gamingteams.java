@@ -13,12 +13,14 @@ import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPIBukkitConfig;
 import me.gaminglounge.configapi.LoadConfig;
 import me.gaminglounge.gamingteams.commands.TeamCommand;
+import me.gaminglounge.gamingteams.listener.AddClearPlaceholder;
 
 public final class Gamingteams extends JavaPlugin {
 
     public static Gamingteams INSTANCE;
     public static FileConfiguration CONFIG;
     public static TeamManager manager;
+    public static PlaceholderManager ph;
     public DataBasePool basePool;
 
     @Override
@@ -29,6 +31,8 @@ public final class Gamingteams extends JavaPlugin {
 
         basePool = new DataBasePool();
         basePool.init();
+
+        ph = new PlaceholderManager(this);
 
         try {
             basePool.createTablePlayer();
@@ -52,7 +56,8 @@ public final class Gamingteams extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        // this.listener();
+        this.listener();
+        ph.register();
     }
 
     @Override
@@ -63,6 +68,6 @@ public final class Gamingteams extends JavaPlugin {
     public void listener() {
         PluginManager pm = getServer().getPluginManager();
 
-        // pm.registerEvents(new InvClickEvent(), this);
+        pm.registerEvents(new AddClearPlaceholder(), this);
     }
 }

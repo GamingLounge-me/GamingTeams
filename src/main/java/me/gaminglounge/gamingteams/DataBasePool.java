@@ -77,7 +77,7 @@ public class DataBasePool {
                 "id INTEGER AUTO_INCREMENT PRIMARY KEY NOT NULL," +
                 "name VARCHAR(128) NOT NULL," +
                 "owner UUID NOT NULL," +
-                "tag VARCHAR(16) NOT NULL)" +
+                "tag VARCHAR(32) NOT NULL)" +
                 "ENGINE = InnoDB;";
 
         Statement stmt = con.createStatement();
