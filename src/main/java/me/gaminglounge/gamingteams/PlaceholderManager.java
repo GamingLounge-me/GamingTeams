@@ -72,7 +72,7 @@ public class PlaceholderManager extends PlaceholderExpansion {
             case "name":
                 return getName(p);
             default:
-                return null;
+                return "";
         }
     }
 
