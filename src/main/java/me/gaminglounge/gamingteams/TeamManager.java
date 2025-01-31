@@ -4,7 +4,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+
+import me.gaminglounge.teamslistener.TeamsJoinPlayer;
 
 public class TeamManager {
 
@@ -29,6 +32,7 @@ public class TeamManager {
         if (invites.containsKey(p) && invites.get(p).containsKey(team) &&
                 invites.get(p).get(team) >= System.currentTimeMillis()) {
             DataBasePool.addPlayerToTeam(Gamingteams.INSTANCE.basePool, team, p.getUniqueId());
+            Bukkit.getServer().getPluginManager().callEvent(new TeamsJoinPlayer(team, p.getUniqueId()));
             return true;
         } else
             return false;

@@ -27,6 +27,7 @@ import me.gaminglounge.guiapi.SubmitPromt;
 import me.gaminglounge.itembuilder.ItemBuilder;
 import me.gaminglounge.itembuilder.ItemBuilderManager;
 import me.gaminglounge.playerinputapi.UseNextChatInput;
+import me.gaminglounge.teamslistener.TeamsLeftPlayer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
@@ -58,6 +59,7 @@ public class Events {
                 }
 
                 DataBasePool.removePlayerToTeam(Gamingteams.INSTANCE.basePool, id, uuid);
+                Bukkit.getServer().getPluginManager().callEvent(new TeamsLeftPlayer(id, uuid));
                 PlaceholderManager.reset(p);
                 Gamingteams.INSTANCE.manager.removeInvite(p, id);
                 p.sendMessage(mm.deserialize(
@@ -430,6 +432,7 @@ public class Events {
                         .getMembersOfflinePlayer(Gamingteams.INSTANCE.basePool, pm.teamID);
                 DataBasePool.removePlayerToTeam(Gamingteams.INSTANCE.basePool, pm.teamID,
                         p.getUniqueId());
+                Bukkit.getServer().getPluginManager().callEvent(new TeamsLeftPlayer(pm.teamID, p.getUniqueId()));
                 if (p.isOnline())
                     PlaceholderManager.reset((Player) p);
                 Gamingteams.INSTANCE.manager.removeInvite((Player) p, pm.teamID);
