@@ -146,6 +146,7 @@ public class Events {
                                             p, "notOwner",
                                             true)))
                                     .getInventory());
+                    return;
                 }
 
                 p.closeInventory();
@@ -186,7 +187,7 @@ public class Events {
                 Player p = (Player) e.getWhoClicked();
                 UUID uuid = p.getUniqueId();
 
-                if (DataBasePool.isOwner(Gamingteams.INSTANCE.basePool, uuid,
+                if (!DataBasePool.isOwner(Gamingteams.INSTANCE.basePool, uuid,
                         tg.teamID)) {
                     p.openInventory(
                             new ErrorGUI(inv, p, mm.deserialize(
@@ -195,6 +196,7 @@ public class Events {
                                             p, "notOwner",
                                             true)))
                                     .getInventory());
+                    return;
                 }
 
                 p.closeInventory();

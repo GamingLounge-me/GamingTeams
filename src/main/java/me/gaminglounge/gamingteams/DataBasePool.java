@@ -18,6 +18,9 @@ import org.bukkit.OfflinePlayer;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
+import me.gaminglounge.teamslistener.TeamsJoinPlayer;
+import me.gaminglounge.teamslistener.TeamsLeftPlayer;
+
 public class DataBasePool {
     HikariDataSource hikari;
 
@@ -215,6 +218,8 @@ public class DataBasePool {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        TeamsJoinPlayer event = new TeamsJoinPlayer(team, playerUUID);
+        Bukkit.getPluginManager().callEvent(event);
     }
 
     public static int getTeam(DataBasePool pool, UUID playerUUID) {
@@ -332,6 +337,8 @@ public class DataBasePool {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        TeamsLeftPlayer event = new TeamsLeftPlayer(team, playerUUID);
+        Bukkit.getPluginManager().callEvent(event);
     }
 
     public static List<UUID> getMembersUUIDs(DataBasePool pool, int team) {
