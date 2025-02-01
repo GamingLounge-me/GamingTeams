@@ -198,7 +198,7 @@ public class DataBasePool {
             return tag;
         } catch (SQLException e) {
             e.printStackTrace();
-            return null;
+            return "";
         }
     }
 
@@ -270,7 +270,7 @@ public class DataBasePool {
             ResultSet res = sel.executeQuery();
             String name;
             if (!res.first()) {
-                name = null;
+                name = "";
             } else {
                 name = res.getString("name");
             }
@@ -279,7 +279,7 @@ public class DataBasePool {
             return name;
         } catch (SQLException e) {
             e.printStackTrace();
-            return null;
+            return "";
         }
     }
 

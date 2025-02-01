@@ -51,11 +51,12 @@ public final class Gamingteams extends JavaPlugin {
 
         if (!CommandAPI.isLoaded())
             CommandAPI.onLoad(new CommandAPIBukkitConfig(this));
-        new TeamCommand();
+            new TeamCommand();
     }
 
     @Override
     public void onEnable() {
+        CommandAPI.onEnable();
         this.listener();
         ph.register();
     }

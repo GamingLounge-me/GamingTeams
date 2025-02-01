@@ -431,11 +431,11 @@ public class Events {
                 DataBasePool.removePlayerToTeam(Gamingteams.INSTANCE.basePool, pm.teamID,
                         p.getUniqueId());
                 if (p.isOnline())
-                    PlaceholderManager.reset((Player) p);
+                    PlaceholderManager.reset(p.getPlayer());
                 Gamingteams.INSTANCE.manager.removeInvite((Player) p, pm.teamID);
                 list.forEach(action -> {
                     if (action.isOnline()) {
-                        ((Player) action).sendMessage(mm.deserialize(
+                        (action.getPlayer()).sendMessage(mm.deserialize(
                                 Language.getValue(Gamingteams.INSTANCE, (Player) action,
                                         "playerLeft",
                                         true),
