@@ -43,5 +43,6 @@
     "InvitePlayer": "invite player",
     "gotTeamInvite": "You got new team invites",
     "noOpenSelf": "You cannot manage yourself",
-    "alreadyHasInvite": "The player <player> already has an invite from you."
+    "alreadyHasInvite": "The player <player> already has an invite from you.",
+    "regex.error": "<red>The input must match \"<regex>\"!</red>"
 }

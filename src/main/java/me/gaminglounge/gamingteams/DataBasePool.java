@@ -75,9 +75,9 @@ public class DataBasePool {
         Connection con = getConnection();
         String sqlCreate = "CREATE TABLE IF NOT EXISTS teams (" +
                 "id INTEGER AUTO_INCREMENT PRIMARY KEY NOT NULL," +
-                "name VARCHAR(128) NOT NULL," +
+                "name VARCHAR(1024) NOT NULL," +
                 "owner UUID NOT NULL," +
-                "tag VARCHAR(32) NOT NULL)" +
+                "tag VARCHAR(128) NOT NULL)" +
                 "ENGINE = InnoDB;";
 
         Statement stmt = con.createStatement();

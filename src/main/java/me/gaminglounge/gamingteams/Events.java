@@ -3,6 +3,7 @@ package me.gaminglounge.gamingteams;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -31,6 +32,7 @@ import me.gaminglounge.teamslistener.TeamsLeftPlayer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 public class Events {
     private static MiniMessage mm;
@@ -166,6 +168,15 @@ public class Events {
                                 return;
                             }
 
+                            Pattern ptm = Pattern.compile("[a-zA-Z0-9_ #:</>]{1,64}");
+                            if (!ptm.matcher(LegacyComponentSerializer.legacySection().serialize(mm.deserialize(name)))
+                                    .matches()) {
+                                p.sendMessage(
+                                        mm.deserialize(Language.getValue(Gamingteams.INSTANCE, p, "regex.error"),
+                                                Placeholder.component("regex", Component.text(ptm.toString()))));
+                                return;
+                            }
+
                             PlaceholderManager.reset(tg.teamID);
 
                             DataBasePool.setName(
@@ -212,6 +223,15 @@ public class Events {
                                         mm.deserialize(Language.getValue(
                                                 Gamingteams.INSTANCE, p,
                                                 "chatinput.cancel")));
+                                return;
+                            }
+
+                            Pattern ptm = Pattern.compile("[a-zA-Z0-9_ #:</>]{1,5}");
+                            if (!ptm.matcher(LegacyComponentSerializer.legacySection().serialize(mm.deserialize(name)))
+                                    .matches()) {
+                                p.sendMessage(
+                                        mm.deserialize(Language.getValue(Gamingteams.INSTANCE, p, "regex.error"),
+                                                Placeholder.component("regex", Component.text(ptm.toString()))));
                                 return;
                             }
 
