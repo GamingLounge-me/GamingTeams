@@ -150,6 +150,7 @@ public class Events {
                                             p, "notOwner",
                                             true)))
                                     .getInventory());
+                    return;
                 }
 
                 p.closeInventory();
@@ -199,7 +200,7 @@ public class Events {
                 Player p = (Player) e.getWhoClicked();
                 UUID uuid = p.getUniqueId();
 
-                if (DataBasePool.isOwner(Gamingteams.INSTANCE.basePool, uuid,
+                if (!DataBasePool.isOwner(Gamingteams.INSTANCE.basePool, uuid,
                         tg.teamID)) {
                     p.openInventory(
                             new ErrorGUI(inv, p, mm.deserialize(
@@ -208,6 +209,7 @@ public class Events {
                                             p, "notOwner",
                                             true)))
                                     .getInventory());
+                    return;
                 }
 
                 p.closeInventory();
@@ -454,11 +456,11 @@ public class Events {
                         p.getUniqueId());
                 Bukkit.getServer().getPluginManager().callEvent(new TeamsLeftPlayer(pm.teamID, p.getUniqueId()));
                 if (p.isOnline())
-                    PlaceholderManager.reset((Player) p);
+                    PlaceholderManager.reset(p.getPlayer());
                 Gamingteams.INSTANCE.manager.removeInvite((Player) p, pm.teamID);
                 list.forEach(action -> {
                     if (action.isOnline()) {
-                        ((Player) action).sendMessage(mm.deserialize(
+                        (action.getPlayer()).sendMessage(mm.deserialize(
                                 Language.getValue(Gamingteams.INSTANCE, (Player) action,
                                         "playerLeft",
                                         true),

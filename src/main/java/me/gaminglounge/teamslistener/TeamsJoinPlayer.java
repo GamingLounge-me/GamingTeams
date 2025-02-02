@@ -20,8 +20,15 @@ public class TeamsJoinPlayer extends Event {
         return teamID;
     }
 
-    public UUID removedMember() {
+    public UUID joinedMember() {
         return member;
+    }
+/**
+ * @deprecated This was wrongfully named removed, use <code>joinedMember()</code> instead.
+ */
+@Deprecated(forRemoval = true)
+    public UUID removedMember() {
+        return joinedMember();
     }
 
     @Override
