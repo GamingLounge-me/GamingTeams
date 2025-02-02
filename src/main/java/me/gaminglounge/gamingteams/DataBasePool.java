@@ -194,7 +194,8 @@ public class DataBasePool {
             PreparedStatement sel = con.prepareStatement(querry);
             sel.setObject(1, id);
             ResultSet res = sel.executeQuery();
-            res.first();
+            if (!res.first())
+                return "";
             String tag = res.getString("tag");
             sel.close();
             con.close();
