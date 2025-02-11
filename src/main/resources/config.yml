@@ -5,24 +5,6 @@ Password: ""
 
 Commands:
   Team:
-    permission: "gamingteams.commands.team"
     # aliases will unregister other commands using this name
     aliases:
       - team
-    SubCommands:
-      add: "add"
-      remove: "remove"
-      name: "name"
-      tag: "tag"
-      member: "member"
-      leave: "leave"
-      join: "join"
-      owner: "owner"
-    Arguments:
-      name: "name"
-      tag: "tag"
-      owner: "owner"
-      player: "player"
-      teams: "teams"
-      info: "info"
-      list: "list"
