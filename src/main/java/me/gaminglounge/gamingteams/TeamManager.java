@@ -75,10 +75,11 @@ public class TeamManager {
      * @return if the removal was succefully.
      */
     public boolean removeInvite(Player player, int team, boolean log) {
-        var a = invites.get(player).remove(team);
-        if (log)
-            Gamingteams.INSTANCE.getLogger().log(Level.ALL, String.valueOf(a));
-        return a != null;
+        if (hasInvite(player, team)) {
+            invites.get(player).remove(team);
+            return true;
+        } else
+            return false;
     }
 
     /**
