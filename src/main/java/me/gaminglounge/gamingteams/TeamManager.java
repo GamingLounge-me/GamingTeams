@@ -3,6 +3,7 @@ package me.gaminglounge.gamingteams;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -11,7 +12,6 @@ import me.gaminglounge.teamslistener.TeamsJoinPlayer;
 
 public class TeamManager {
 
-    // Player = Invited Player, integer = Team ID, Long = Timeout Invite
     private HashMap<Player, HashMap<Integer, Long>> invites;
 
     public TeamManager() {
@@ -29,30 +29,79 @@ public class TeamManager {
     }
 
     public boolean accept(Player p, int team) {
-        if (invites.containsKey(p) && invites.get(p).containsKey(team) &&
-                invites.get(p).get(team) >= System.currentTimeMillis()) {
+        if (isInviteValid(p, team)) {
             DataBasePool.addPlayerToTeam(Gamingteams.INSTANCE.basePool, team, p.getUniqueId());
+            Gamingteams.INSTANCE.getLogger().log(Level.ALL, p.getName() + " joined the team with the id " + team);
             Bukkit.getServer().getPluginManager().callEvent(new TeamsJoinPlayer(team, p.getUniqueId()));
             return true;
         } else
             return false;
     }
 
-    public boolean hasInvite(Player p, int team) {
-        return invites.containsKey(p) && invites.get(p).containsKey(team);
+    /**
+     * @param player The player which has or will get the invite
+     * @param team   the team which the invite is coming from
+     * @return if the player has an invite from this team
+     */
+    public boolean hasInvite(Player player, int team) {
+        return invites.containsKey(player) && invites.get(player).containsKey(team);
     }
 
-    public void removeInvite(Player p, int team) {
-        if (invites.containsKey(p) && invites.get(p).containsKey(team)) {
-            invites.get(p).remove(team);
-        }
+    /**
+     * This method also uses {@code hasInvite()} so you dont need to also check
+     * this.
+     * 
+     * @param player The player which has or will get the invite
+     * @param team   the team which the invite is coming from
+     * @return if the invite is still valid
+     */
+    public boolean isInviteValid(Player player, int team) {
+        if (hasInvite(player, team)) {
+            if (invites.get(player).get(team) < System.currentTimeMillis()) {
+                removeInvite(player, team);
+                return false;
+            } else
+                return true;
+        } else
+            return false;
     }
 
-    public List<Integer> listInvites(Player p) {
+    /**
+     * Removes the invite a player got from an team.
+     * 
+     * @param player The invited player.
+     * @param team   The team that invited the player.
+     * @param log    If the removed of the invite should be logged to the console.
+     * @return if the removal was succefully.
+     */
+    public boolean removeInvite(Player player, int team, boolean log) {
+        var a = invites.get(player).remove(team);
+        if (log)
+            Gamingteams.INSTANCE.getLogger().log(Level.ALL, String.valueOf(a));
+        return a != null;
+    }
+
+    /**
+     * activated the removeInvite method with the log boolean set to false.
+     * 
+     * @see removeInvite(Player, int, boolean)
+     */
+    public boolean removeInvite(Player player, int team) {
+        return removeInvite(player, team, false);
+    }
+
+    /**
+     * Note that this list isn't filtered by {@code isInviteValid()} so also invites
+     * that are expired but not cleared from the invite list are displayed.
+     * 
+     * @param player
+     * @return All invted the player has.
+     */
+    public List<Integer> listInvites(Player player) {
         List<Integer> a = new ArrayList<>();
 
-        if (invites.containsKey(p)) {
-            invites.get(p).forEach((integer, aLong) -> {
+        if (invites.containsKey(player)) {
+            invites.get(player).forEach((integer, aLong) -> {
                 a.add(integer);
             });
         }

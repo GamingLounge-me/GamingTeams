@@ -34,6 +34,9 @@ public final class Gamingteams extends JavaPlugin {
 
         ph = new PlaceholderManager(this);
 
+        if (!CommandAPI.isLoaded())
+            CommandAPI.onLoad(new CommandAPIBukkitConfig(this));
+
         try {
             basePool.createTablePlayer();
             basePool.createTableTeams();
@@ -49,8 +52,6 @@ public final class Gamingteams extends JavaPlugin {
 
         manager = new TeamManager();
 
-        if (!CommandAPI.isLoaded())
-            CommandAPI.onLoad(new CommandAPIBukkitConfig(this));
         new TeamCommand();
     }
 

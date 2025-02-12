@@ -3,6 +3,7 @@ package me.gaminglounge.gamingteams;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Level;
 import java.util.regex.Pattern;
 
 import org.bukkit.Bukkit;
@@ -63,7 +64,8 @@ public class Events {
                 DataBasePool.removePlayerToTeam(Gamingteams.INSTANCE.basePool, id, uuid);
                 Bukkit.getServer().getPluginManager().callEvent(new TeamsLeftPlayer(id, uuid));
                 PlaceholderManager.reset(p);
-                Gamingteams.INSTANCE.manager.removeInvite(p, id);
+                Gamingteams.INSTANCE.getLogger().log(Level.ALL, p.getName() + " left the team with the id " + id);
+                Gamingteams.manager.removeInvite(p, id, true);
                 p.sendMessage(mm.deserialize(
                         Language.getValue(Gamingteams.INSTANCE, p, "leaftTeam", true)));
                 List<OfflinePlayer> list = DataBasePool
@@ -170,11 +172,17 @@ public class Events {
                             }
 
                             Pattern ptm = Pattern.compile("[a-zA-Z0-9_ #:</>]{1,64}");
-                            if (!ptm.matcher(LegacyComponentSerializer.legacySection().serialize(mm.deserialize(name)))
+                            if (!ptm.matcher(LegacyComponentSerializer.legacySection()
+                                    .serialize(mm.deserialize(name)))
                                     .matches()) {
                                 p.sendMessage(
-                                        mm.deserialize(Language.getValue(Gamingteams.INSTANCE, p, "regex.error"),
-                                                Placeholder.component("regex", Component.text(ptm.toString()))));
+                                        mm.deserialize(Language.getValue(
+                                                Gamingteams.INSTANCE, p,
+                                                "regex.error"),
+                                                Placeholder.component(
+                                                        "regex",
+                                                        Component.text(ptm
+                                                                .toString()))));
                                 return;
                             }
 
@@ -229,11 +237,17 @@ public class Events {
                             }
 
                             Pattern ptm = Pattern.compile("[a-zA-Z0-9_ #:</>]{1,5}");
-                            if (!ptm.matcher(LegacyComponentSerializer.legacySection().serialize(mm.deserialize(name)))
+                            if (!ptm.matcher(LegacyComponentSerializer.legacySection()
+                                    .serialize(mm.deserialize(name)))
                                     .matches()) {
                                 p.sendMessage(
-                                        mm.deserialize(Language.getValue(Gamingteams.INSTANCE, p, "regex.error"),
-                                                Placeholder.component("regex", Component.text(ptm.toString()))));
+                                        mm.deserialize(Language.getValue(
+                                                Gamingteams.INSTANCE, p,
+                                                "regex.error"),
+                                                Placeholder.component(
+                                                        "regex",
+                                                        Component.text(ptm
+                                                                .toString()))));
                                 return;
                             }
 
@@ -454,10 +468,13 @@ public class Events {
                         .getMembersOfflinePlayer(Gamingteams.INSTANCE.basePool, pm.teamID);
                 DataBasePool.removePlayerToTeam(Gamingteams.INSTANCE.basePool, pm.teamID,
                         p.getUniqueId());
-                Bukkit.getServer().getPluginManager().callEvent(new TeamsLeftPlayer(pm.teamID, p.getUniqueId()));
+                Gamingteams.manager.removeInvite((Player) p, pm.teamID);
+                Gamingteams.INSTANCE.getLogger().log(Level.ALL,
+                        p.getName() + " was removed from the team with the id " + pm.teamID);
+                Bukkit.getServer().getPluginManager()
+                        .callEvent(new TeamsLeftPlayer(pm.teamID, p.getUniqueId()));
                 if (p.isOnline())
                     PlaceholderManager.reset(p.getPlayer());
-                Gamingteams.INSTANCE.manager.removeInvite((Player) p, pm.teamID);
                 list.forEach(action -> {
                     if (action.isOnline()) {
                         (action.getPlayer()).sendMessage(mm.deserialize(
