@@ -10,7 +10,7 @@ import me.gaminglounge.gamingteams.PlaceholderManager;
 public class AddClearPlaceholder implements Listener {
 
     @EventHandler
-    public void onJoin(PlayerQuitEvent e) {
+    public void onQuit(PlayerQuitEvent e) {
         PlaceholderManager.reset(e.getPlayer());
     }
 
