@@ -72,7 +72,7 @@ public class Events {
                         .getMembersOfflinePlayer(Gamingteams.INSTANCE.basePool, id);
                 list.forEach(action -> {
                     if (action.isOnline()) {
-                        ((Player) action).sendMessage(mm.deserialize(
+                        action.getPlayer().sendMessage(mm.deserialize(
                                 Language.getValue(Gamingteams.INSTANCE, (Player) action,
                                         "playerLeft",
                                         true),
