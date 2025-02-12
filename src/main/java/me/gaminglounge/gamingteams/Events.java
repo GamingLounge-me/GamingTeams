@@ -110,19 +110,26 @@ public class Events {
 
                     p.openInventory(
                             new SubmitPromt(e.getInventory(), p, (event) -> {
-                                DataBasePool.removeTeam(
-                                        Gamingteams.INSTANCE.basePool,
-                                        tg.teamID,
-                                        p.getUniqueId());
-                                DataBasePool.removePlayerToTeam(
-                                        Gamingteams.INSTANCE.basePool,
-                                        tg.teamID,
-                                        p.getUniqueId());
-                                p.sendMessage(mm.deserialize(
-                                        Language.getValue(Gamingteams.INSTANCE,
-                                                tg.p, "removedTeam",
-                                                true)));
-                            }).getInventory());
+                                if (e.getInventory().getHolder() instanceof SubmitPromt sp)
+                                    DataBasePool.removeTeam(
+                                            Gamingteams.INSTANCE.basePool,
+                                            tg.teamID,
+                                            p.getUniqueId());
+
+                                DataBasePool.getMembersOfflinePlayer(Gamingteams.INSTANCE.basePool, tg.teamID)
+                                        .forEach(pl -> {
+                                            DataBasePool.removePlayerToTeam(
+                                                    Gamingteams.INSTANCE.basePool,
+                                                    tg.teamID,
+                                                    pl.getUniqueId());
+
+                                            if (pl.isOnline()) {
+                                                pl.getPlayer().sendMessage(mm.deserialize(
+                                                        Language.getValue(Gamingteams.INSTANCE, pl.getPlayer(),
+                                                                "removedTeam", true)));
+                                            }
+                                        });
+                            }, true).getInventory());
                     return;
                 }
 
@@ -150,7 +157,7 @@ public class Events {
                                     Language.getValue(
                                             Gamingteams.INSTANCE,
                                             p, "notOwner",
-                                            true)))
+                                            false)))
                                     .getInventory());
                     return;
                 }
@@ -215,7 +222,7 @@ public class Events {
                                     Language.getValue(
                                             Gamingteams.INSTANCE,
                                             p, "notOwner",
-                                            true)))
+                                            false)))
                                     .getInventory());
                     return;
                 }
@@ -327,15 +334,33 @@ public class Events {
 
         ItemBuilderManager.addBothClickEvent("GamingTeams:invite_player", (e) -> {
             e.setCancelled(true);
+            Inventory inv = e.getInventory();
+            Player p = (Player) e.getWhoClicked();
+            UUID uuid = p.getUniqueId();
+            int team = DataBasePool.getTeam(Gamingteams.INSTANCE.basePool, uuid);
+            if (!DataBasePool.isOwner(Gamingteams.INSTANCE.basePool, uuid,
+                    team)) {
+                p.openInventory(
+                        new ErrorGUI(inv, p, mm.deserialize(
+                                Language.getValue(
+                                        Gamingteams.INSTANCE,
+                                        p, "notOwner",
+                                        false)))
+                                .getInventory());
+                return;
+            }
 
             List<ItemStack> items = new ArrayList<>();
 
             Bukkit.getOnlinePlayers().forEach(action -> {
-                items.add(
-                        new ItemBuilder(action.getUniqueId())
-                                .setName(action.displayName())
-                                .addBothClickEvent("GamingTeams:invite")
-                                .build());
+                if (action.getUniqueId() != p.getUniqueId()) {
+                    items.add(
+                            new ItemBuilder(action.getUniqueId())
+                                    .setName(action.displayName())
+                                    .addBothClickEvent("GamingTeams:invite")
+                                    .build());
+                }
+
             });
 
             e.getWhoClicked().openInventory(
@@ -343,7 +368,6 @@ public class Events {
                             .setBackInv(e.getInventory())
                             .setItems(items)
                             .getInventory());
-
         });
 
         ItemBuilderManager.addBothClickEvent("GamingTeams:invite", (e) -> {
@@ -364,9 +388,13 @@ public class Events {
                                             Placeholder.component("player",
                                                     ((Player) p).displayName())))
                                     .getInventory());
+                    if (e.getInventory().getHolder() instanceof Pagenation pg) {
+                        pg.removeItem(e.getCurrentItem());
+                        pg.refeshPage();
+                    }
                     return;
                 }
-                ((Player) p).sendMessage(
+                p.getPlayer().sendMessage(
                         mm.deserialize(Language.getValue(Gamingteams.INSTANCE, (Player) p,
                                 "gotTeamInvite", true)));
                 if (e.getInventory().getHolder() instanceof Pagenation pg) {
