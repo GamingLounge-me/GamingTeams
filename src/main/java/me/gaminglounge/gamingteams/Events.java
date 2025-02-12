@@ -232,7 +232,7 @@ public class Events {
                 new UseNextChatInput(p)
                         .sendMessage(mm.deserialize(
                                 Language.getValue(Gamingteams.INSTANCE, p,
-                                        "chatinput.changename.question", true),
+                                        "chatinput.changetag.question", true),
                                 Placeholder.component("exit", Component.text(exit))))
                         .setChatEvent((event, name) -> {
                             if (name.equalsIgnoreCase(exit)) {

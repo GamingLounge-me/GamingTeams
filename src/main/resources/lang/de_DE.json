@@ -36,6 +36,7 @@
     "chatinput.exit": "exit",
     "chatinput.cancel": "Du hast die Eingabe abgebrochen.",
     "chatinput.changename.question": "Schreibe deinen neuen Teamnamen in den Chat oder beende mit \"<exit>\"",
+    "chatinput.changetag.question": "Schreibe deinen neuen Teamtag in den Chat oder beende mit \"<exit>\"",
     "playermanagement.makeowner.name": "Zum Besitzer machen",
     "playermanagement.kick.name": "Kicken",
     "InvitePlayer": "Spieler einladen",
