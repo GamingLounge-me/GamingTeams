@@ -65,7 +65,7 @@ public class Events {
                 Bukkit.getServer().getPluginManager().callEvent(new TeamsLeftPlayer(id, uuid));
                 PlaceholderManager.reset(p);
                 Gamingteams.INSTANCE.getLogger().log(Level.ALL, p.getName() + " left the team with the id " + id);
-                Gamingteams.manager.removeInvite(p, id, true);
+                Gamingteams.manager.removeInvite(p, id);
                 p.sendMessage(mm.deserialize(
                         Language.getValue(Gamingteams.INSTANCE, p, "leaftTeam", true)));
                 List<OfflinePlayer> list = DataBasePool

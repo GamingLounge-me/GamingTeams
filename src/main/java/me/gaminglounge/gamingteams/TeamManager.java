@@ -71,24 +71,14 @@ public class TeamManager {
      * 
      * @param player The invited player.
      * @param team   The team that invited the player.
-     * @param log    If the removed of the invite should be logged to the console.
      * @return if the removal was succefully.
      */
-    public boolean removeInvite(Player player, int team, boolean log) {
+    public boolean removeInvite(Player player, int team) {
         if (hasInvite(player, team)) {
             invites.get(player).remove(team);
             return true;
         } else
             return false;
-    }
-
-    /**
-     * activated the removeInvite method with the log boolean set to false.
-     * 
-     * @see removeInvite(Player, int, boolean)
-     */
-    public boolean removeInvite(Player player, int team) {
-        return removeInvite(player, team, false);
     }
 
     /**
